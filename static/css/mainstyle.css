@@ -1,0 +1,50 @@
+body{
+  background-image: url('/static/images/back.jpg');
+  padding: 10px;
+
+}
+.text-align-center{
+  text-align: center;
+}
+.tabContent {
+  display: none;
+}
+.border-top-red-5 {
+  border-top:5px solid red;
+}
+.font-light {
+  color : #aaa;
+}
+.border-left-1-5{
+  border-left:0.75px solid black;
+}
+.border-top-1-5 {
+  border-top:1.5px solid black;
+}
+.border-bottom-1-5 {
+  border-bottom:1.5px solid black;
+}
+.border-right-1-5{
+  border-right:0.75px solid black;
+}
+.my-border-3 {
+  border:1.5px solid black;
+}
+.bg-white {
+  background-color: white;
+}
+.bg-darkgrey {
+  background-color: beige;
+}
+.tabButton {
+  text-align : center;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.border-rm-top {
+  border-top:0px solid white;
+}
+.border-rm-bottom {
+  border-bottom:0px solid white;
+}
