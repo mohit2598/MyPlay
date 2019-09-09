@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <% include partials/head1.ejs %> <!-- This will include and link all the required js and css files -->
+<!-- //fonts -->
+</head>
+  <body>
+
+    <% include partials/navbar1.ejs %>
+        
+    <!-- upload -->
+		<div class="upload">
+			<!-- container -->
+			<div class="container">
+				<div class="upload-grids">
+					<div class="upload-right">
+						<div class="upload-file">
+							<!-- <div class="services-icon">
+								<span class="glyphicon glyphicon-open" aria-hidden="true"></span>
+							</div> -->
+							<div class="upload-info" >
+                                <h5 id='fileheader'>Select files to upload</h5>
+                                    <span></span>
+                                <p id='filesubheader'>Drag and drop files</p>
+                            </div>
+                            <form id="upload_form" enctype="multipart/form-data" method="post">
+                                <input type="file" name="video_upload" id="videoFile" ><br>
+                                <input type="text" name="title" id="title">
+                                <input type="text" name="description" id="description">
+                                
+                                <button type="button" class="btn btn-success" onclick="uploadFile()">Submit</button>
+                                <!-- <button  onclick="uploadFile()"> -->
+                                <progress id="progressBar" value="0" max="100" style="width:300px;"></progress>
+                                <h3 id="status"></h3>
+                                <p id="loaded_n_total"></p>
+                            </form>
+						</div>
+						
+					</div>
+					
+							
+			</div>
+			<!-- //container -->
+        </div>
+        <script>
+            function _(el) {
+  return document.getElementById(el);
+}
+
+function uploadFile() {
+  var file = _("videoFile").files[0];
+  var title = _("title").value;
+  var description = _("description").value;
+  
+  
+  var formdata = new FormData();
+  formdata.append("file1", file);
+  formdata.append("title",title);
+  formdata.append("description",description);
+  
+ // console.log(formdata);
+  var ajax = new XMLHttpRequest();
+  ajax.upload.addEventListener("progress", progressHandler, false);
+  ajax.addEventListener("load", completeHandler, false);
+  ajax.addEventListener("error", errorHandler, false);
+  ajax.addEventListener("abort", abortHandler, false);
+  ajax.open("POST", "/video/upload");
+  ajax.send(formdata);
+}
+
+function progressHandler(event) {
+  _("loaded_n_total").innerHTML = "Uploaded " + Math.round((event.loaded)/(1024*1024)) + " MB of " + Math.round((event.total)/(1024*1024));
+  var percent = (event.loaded / event.total) * 100;
+  _("progressBar").value = Math.round(percent);
+  _("status").innerHTML = Math.round(percent) + "% uploaded... please wait";
+}
+
+function completeHandler(event) {
+    _("fileheader").innerHTML = event.target.responseText;
+    _("filesubheader").innerHTML = '';
+    _("status").innerHTML = '';
+    _("progressBar").value = 100; //wil clear progress bar after successful upload
+
+}
+
+function errorHandler(event) {
+  _("status").innerHTML = "Upload Failed";
+}
+
+function abortHandler(event) {
+  _("status").innerHTML = "Upload Aborted";
+}
+        </script>
+		<!-- //upload -->
+		
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/static/js/bootstrap.min.js"></script>
+    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+  </body>
+  
+</html>

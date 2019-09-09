@@ -5,21 +5,26 @@ const session = require("express-session");
 const bodyParser = require("body-parser");
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const cookieSession = require('cookie-session');
+const cookieSession = require('cookie-session');        // this is written after static so as to reduce call to session
 const key = require('./config/keys');
 const config = require('config');
 const localStrategy = require('./middlewares/passport-local');
 const sessionPersistent = require('./startup/session');
 const googleStrategy = require('./middlewares/passport-google');
 const passport = require('passport');
-
+const busboy = require('connect-busboy');
 
 app.set('view engine','ejs');             //app.use(express.urlencoded);  //converts url encoded params to key value pair
 app.use('/static', express.static('static'));   //this is to fool the client that there is a satic file on the server
 
-// these are to initiate the passport local strategy
-
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(busboy({
+    highWaterMark: 2 * 1024 * 1024, // Set 2MiB buffer
+})); // Insert the busboy middle-ware
+
+
+
+
 app.use(cookieParser());
 app.use(sessionPersistent);
 
