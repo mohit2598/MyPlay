@@ -16,14 +16,14 @@ const busboy = require('connect-busboy');
 
 app.set('view engine','ejs');             //app.use(express.urlencoded);  //converts url encoded params to key value pair
 app.use('/static', express.static('static'));   //this is to fool the client that there is a satic file on the server
+app.use('/assets', express.static('assets'));
 
-app.use(bodyParser.urlencoded({ extended: false }));
 app.use(busboy({
     highWaterMark: 2 * 1024 * 1024, // Set 2MiB buffer
 })); // Insert the busboy middle-ware
 
 
-
+app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(cookieParser());
 app.use(sessionPersistent);
