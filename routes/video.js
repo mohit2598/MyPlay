@@ -130,7 +130,6 @@ router.post('/upload',async (req,res) =>{
 							}	
 						})
 					}
-					
 				});
 			}else{
 				console.log(err);
