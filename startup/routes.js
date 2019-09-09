@@ -4,11 +4,14 @@
     user = require('../routes/user'),
     settings = require('../routes/settings'),
     forgot = require('../routes/forgot'),
-    play = require('../routes/play')
+    play = require('../routes/play'),
+    search = require('../routes/search'),
+    video = require('../routes/video')
 //     auth = require('../routes/auth'),
 
  module.exports = function(app){
-     console.log("vdfv");
+    app.use('/search',search);
+    app.use('/video',video);
     app.use('/play',play);
     app.use('/user',user);
     app.use('/settings',settings);

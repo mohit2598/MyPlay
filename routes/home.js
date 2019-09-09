@@ -5,9 +5,9 @@ const express = require('express'),
 router.get('/',async (req,res,next) =>{
     
     try{       
-        
-        // res.render('home.ejs');
-        res.send(req.user);
+         res.render('home.ejs');
+        //res.send(");
+        //res.send(req.user);
         // res.render("home.ejs",{user:req.user,ques:list,isHome:true,title:'home'})        
     }
     catch(ex){
