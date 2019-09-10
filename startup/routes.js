@@ -9,11 +9,12 @@
     search = require('../routes/search'),
     video = require('../routes/video'),
     index = require('../routes/index'),
-    admin = require('../routes/admin')
-
+    admin = require('../routes/admin'),
+    playlist = require('../routes/playlist')
 //     auth = require('../routes/auth'),
 
  module.exports = function(app){
+    app.use('/playlist',playlist);
     app.use('/search',search);
     app.use('/video',video);
     app.use('/play',play);

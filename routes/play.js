@@ -7,7 +7,7 @@ router.get('/:id',async (req,res,next)=>{
     var video = {
         id : req.params.id
     }
-    res.render('play.ejs',{video : video});
+    res.render('play.ejs',{videos : video,user : req.user});
 });
 
 
