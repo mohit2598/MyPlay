@@ -16,7 +16,7 @@ router.post('/login',(req,res,next) =>{
             })
            
         }else{
-             res.send('fail');
+            res.send('fail');
         }
     })(req,res,next);
 })
