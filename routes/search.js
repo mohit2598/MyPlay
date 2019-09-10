@@ -5,10 +5,10 @@ const express = require('express'),
 
 router.get('/query',async function(req, res) {
     query = req.query.query;
-   // console.log(query);
+   console.log(query);
     var list = await getSearchResult(query);
     console.log(list);
-    res.render('searchResults.ejs',{list : list,moment : moment});
+    res.render('searchResults.ejs',{list : list,moment : moment,user : req.user});
 })
 
 module.exports = router;

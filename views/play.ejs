@@ -61,29 +61,18 @@
 
 			<div class="videolist" >
 				<nav class="vids">
-					<a class="link" href="/player/<%= video.id %>">test1</a>
-
-					<a class="link" href="https://www.youtube.com/watch?v=eoFkN53mMPA">test2</a>
-
-					<a class="link" href="http://www.html5videoplayer.net/videos/toystory.mp4">test3</a>
-
-					<a class="link"
-						href="http://download.wavetlan.com/SVV/Media/HTTP/H264/Talkinghead_Media/H264_test4_Talkingheadclipped_mp4_480x320.mp4">test4</a>
-
-					<a class="link"
-						href="http://download.wavetlan.com/SVV/Media/HTTP/H264/Other_Media/H264_test5_voice_mp4_480x360.mp4">test5</a>
-
-					<a class="link"
-						href="http://download.wavetlan.com/SVV/Media/HTTP/H264/Other_Media/H264_test7_voiceclip_mp4_480x360.mp4">test6</a>
-
-					<a class="link"
-						href="http://download.wavetlan.com/SVV/Media/HTTP/H264/Other_Media/H264_test8_voiceclip_mp4_480x320.mp4">test7</a>
-
-					<a class="link"
-						href="http://download.wavetlan.com/SVV/Media/HTTP/MP4/ConvertedFiles/Media-Convert/Unsupported/dw11222.mp4">test8</a>
-
-					<a class="link"
-						href="http://download.wavetlan.com/SVV/Media/HTTP/MP4/ConvertedFiles/Media-Convert/Unsupported/test7.mp4">tsest9</a>
+						<button type="button" class="btn btn-primary btn-raised" onclick="sortingHandler(this)" data-order="asc" data-type="alphabetical">Alphabetical sorting</button>
+						<button type="button" class="btn btn-primary btn-raised" onclick="sortingHandler(this)" data-order="asc" data-type="views">Views sorting</button>
+						<button type="button" class="btn btn-primary btn-raised" onclick="sortingHandler(this)" data-order="asc" data-type="dateuploaded">Date Uploaded sorting</button>
+						<ul class="ml4 js-sortable sortable list flex flex-column list-reset" id="videoContainer" data-playlistid="<%= videos[0].playlistId %>">
+							<% videos.forEach(function(video){ %>
+							  <li data-videoid="<%= video.videoId._id %>" data-views="yet to store" data-dateuploaded="<%= video.videoId.uploadTime %>" data-name="<%= video.videoId.title %>"> <%= video.videoId.title %> </li>
+						  <%  }) %>
+						  
+						  </ul>
+					
+						
+					
 				</nav>
 			</div>
 		</div>
@@ -92,8 +81,29 @@
 	<!-- Bootstrap core JavaScript
     ================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
-	<script src="/static/js/bootstrap.min.js"></script>
-	<script src="/static/js/player.js"></script>
+		<% include partials/footer.ejs %>
+						<script>
+							sortable('.sortable',{
+							  forcePlaceholderSize: true,
+							  placeholderClass: 'ph-class',
+							  hoverClass: 'bg-maroon yellow'
+							});
+							
+							sortable('.sortable')[0].addEventListener('sortupdate', function(e) {
+							  console.log(e.detail);
+							  let pid = document.getElementById('videoContainer').dataset.playlistid;
+							  $.post("/playlist/reorder",
+								{
+								  origin : e.detail.origin.index,
+								  destination : e.detail.destination.index,
+								  playlistId : pid
+								},
+								function(data,status){
+								  console.log(data+"::"+status);
+								}
+							  );
+						  });
+						  </script>
 	<!-- Just to make our placeholder images work. Don't actually copy the next line! -->
 </body>
 

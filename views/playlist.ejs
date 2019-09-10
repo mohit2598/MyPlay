@@ -1,0 +1,84 @@
+<!-- This page requires the following, in ejs render:
+1.videoId -> just a string or num
+  -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<% include partials/head1.ejs %>
+
+	<!-- This will include and link all the required js and css files -->
+	<title>
+		Playlist
+	</title>
+</head>
+
+<body>
+	<% include partials/navbar1.ejs %>
+	<br>
+	<br><br>
+	<br><br>
+	<br><br>
+	<br>
+	<!-- Button trigger modal -->
+	<button class="btn btn-primary addToPlaylistButton" onclick="addThisToPlaylist(this)" data-videoid="<%= videoId %>">
+		Add to Playlist
+		</a>
+		<!-- <button type="button" style="display:none;" id="video-added-msg" class="btn btn-secondary"
+			data-toggle="snackbar" data-style="toast" data-content="Video added to playlist.">
+			Toast
+		</button>
+		<button type="button" style="display:none;" id="playlist-created-msg" class="btn btn-secondary"
+			data-toggle="snackbar" data-style="toast" data-content="Playlist created.">
+			Toast
+		</button>
+		<button type="button" style="display:none;" id="video-removed-msg" class="btn btn-secondary"
+			data-toggle="snackbar" data-style="toast" data-content="Video removed from playlist.">
+			Toast
+		</button> -->
+	
+		<div class="modal fade" id="playlistModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Add to playlist</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div id="playlistSectionInModal">
+						</div>
+						<button id="createPlaylistButton" type="button" class="btn btn-primary"
+							onclick="showCreateOption(this)">
+							Create new playlist </button>
+						<div id="createPlaylistDialog">
+							<form name="createPlaylistForm" onsubmit="return false;">
+								<div class="form-group">
+									<label for="name">Name</label>
+									<input name="name" type="text" class="form-control"
+										placeholder="Enter Playlist Name...">
+								</div>
+								<div class="form-group">
+									<label for="privacy" >Privacy</label>
+									<select name="privacy" class="form-control">
+										<option value="Public" name="privacy">Public</option>
+										<option value="Private" name="privacy">Private</option>
+									</select>
+								</div>
+								<input type="hidden" value="" name="videoId">
+								<input type="submit" class="btn btn-primary " value="Create"
+									onclick="createPlaylistFun()">
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		    
+		<% include partials/footer.ejs %>
+		
+</body>
+
+</html>

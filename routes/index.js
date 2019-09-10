@@ -5,7 +5,10 @@ const express = require('express'),
 router.get('/',async (req,res,next) =>{
     
     try{       
-         res.render('index.ejs');
+        if(req.user){
+            res.render('index.ejs',{user:req.user});
+        } 
+       
         //res.send(");
         //res.send(req.user);
         // res.render("home.ejs",{user:req.user,ques:list,isHome:true,title:'home'})        

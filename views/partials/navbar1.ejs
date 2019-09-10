@@ -16,7 +16,7 @@
                         <!-- including scripts for search bar -->
                         <link rel="stylesheet" href="/static/css/code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
                         <link rel="stylesheet" href="/static/css/jqueryui.com/resources/demos/style.css">
-                        <script src="/static/js/code.jquery.com/jquery-1.12.4.js"></script>
+                        <!-- <script src="/static/js/code.jquery.com/jquery-1.12.4.js"></script> -->
                         <script src="/static/js/code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
                         <script src="/static/js/searchSuggest.js"></script>
                         
@@ -109,9 +109,16 @@
                                               <div class="feedback-grid">
                                                   <p>Suspendisse tristique magna ut urna pellentesque, ut egestas velit faucibus. Nullam mattis lectus ullamcorper dui dignissim, sit amet egestas orci ullamcorper.</p>
                                               </div>
-                                              <div class="button-bottom">
-                                                  <p><a href="#small-dialog" class="play-icon popup-with-zoom-anim">Sign in</a> to get started.</p>
+                                              <% if(user){ %>
+                                              <div class="button-bottom" id="user" data="<%= user.email %>">
+                                                  <p><a href="#small-dialog" class="play-icon popup-with-zoom-anim">Welcomde<%= user.name %></a> to get started.</p>
                                               </div>
+                                              <% } else { %>
+                                                <div class="button-bottom" id="user" data="">
+                                                    <p><a href="#small-dialog" class="play-icon popup-with-zoom-anim">Sign in</a> to get started.</p>
+                                                </div>
+                                                  
+                                               <% } %> 
                                           </div>
                                       </div>
                                       <div id="small-dialog5" class="mfp-hide">
@@ -170,9 +177,14 @@
                                               });
                                       </script>	
                   </div>
-                  <div class="signin">
-                      <a href="#small-dialog" class="play-icon popup-with-zoom-anim">Sign In</a>
-                      <div id="small-dialog" class="mfp-hide">
+                  <div class="signin" >
+                      <p id = "userID" data-id="<%= user.email %>" ></p>
+                      <% if(user) { %>
+                        <a href="/" > Welcome <%= user.name %> </a>
+                      <% } else { %>
+                        <a href="#small-dialog" class="play-icon popup-with-zoom-anim">Sign In</a>
+                      <% } %>
+                        <div id="small-dialog" class="mfp-hide">
                           <h3>Login</h3>
                           <div class="social-sits">
                               <div class="facebook-button">
