@@ -3,9 +3,9 @@ const router = express.Router();
 const Modals = require('../dbModels/playlist.js');
 const VideosModal = require("../dbModels/video.js");
 
-router.get('/', async function (req, res) {
-	res.render('playlist.ejs', { videoId: "myvid",user : req.user });
-});
+// router.get('/', async function (req, res) {
+// 	res.render('playlist1.ejs', { videoId: "myvid",user : req.user });
+// });
 
 router.get('/getAll/:userID', async function (req, res) {   // API to get all playlists of a user
 	try {
@@ -40,7 +40,7 @@ router.get('/id/:pid', async function (req, res) {
 			return -1;
 		});
 		//console.log(songsWithExtraInfo);
-		res.render('play.ejs', { videos: songsWithExtraInfo });
+		res.render('playlist2.ejs', { videos: songsWithExtraInfo ,user : req.user});
 	} catch (err) {
 		throw err;
 	}
@@ -223,7 +223,7 @@ router.post('/orderPlaylist', async function (req, res) {
 		let order = req.body.order;
 		let songs = await Modals.playlistContent.find(
 			{
-				playlistId: '5d7354acd476a21864141819'
+				playlistId: req.body.playlistid
 			}
 		);
 		let temp;

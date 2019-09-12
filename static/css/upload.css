@@ -1,0 +1,49 @@
+#success_message {
+    display: none;
+}
+
+.text-red {
+    color: rgb(255, 80, 80);
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 400px;
+    padding: 5px 10px;
+    border: 1px solid rgb(51, 51, 51);
+    background-color: white;
+}
+
+.tag-box {
+    border: none;
+    outline: none;
+    padding: 10px 5px;
+    flex-grow: 1;
+}
+
+.tag {
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+    background-color: rgb(151, 248, 255);
+    padding: 5px 30px 5px 5px;
+    margin: 5px;
+    border-radius: 3px;
+    max-width: 150px;
+    text-overflow: ellipsis;
+}
+
+.times {
+    font-size: 16px;
+    font-weight: bolder;
+    color: rgb(106, 73, 255);
+    top: 0px;
+    right: 0px;
+    margin: 3px 10px;
+    transition: .3s;
+    cursor: pointer;
+}
+
+::after {
+    color: rgb(255, 138, 138);
+}

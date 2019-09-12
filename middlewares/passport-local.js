@@ -8,6 +8,7 @@ passport.serializeUser(function(user,done) {
 });
 
 passport.deserializeUser(function(sessionUser,done) {	// here sessionUser points req.session.passport.user
+	
 	done(null,sessionUser);								// the result here is that req.user points to sessionUser i.e. to get email -> req.user.email
 });
 
