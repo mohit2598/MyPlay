@@ -13,6 +13,7 @@ const sessionPersistent = require('./startup/session');
 const googleStrategy = require('./middlewares/passport-google');
 const passport = require('passport');
 const busboy = require('connect-busboy');
+const router = express.Router();
 
 app.set('view engine','ejs');             //app.use(express.urlencoded);  //converts url encoded params to key value pair
 app.use('/static', express.static('static'));   //this is to fool the client that there is a satic file on the server
@@ -35,6 +36,9 @@ app.use(passport.session(),(req,res,next) =>{
    next();
 });
 
+// app.use('/',router.get('/',(req,res,next)=>{
+//     console.log(req.user);
+// }));
 
 // starts up mongodb
 require('./startup/db')(app);

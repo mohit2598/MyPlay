@@ -20,7 +20,7 @@ module.exports = async function(str){
    // console.log(list);
     var fuse = new Fuse(list, options); // "list" is the item array
     var result = fuse.search(str);
-    console.log(result);
+   // console.log(result);
     return result;
 }
 

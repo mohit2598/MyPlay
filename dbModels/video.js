@@ -46,7 +46,7 @@ const videoSchema = new mongoose.Schema({
     //hash:{
     //    type:string,
     //},
-    isprivate:{
+    isPrivate:{
         type:Boolean,
         default:false,
     },             
@@ -57,6 +57,12 @@ const videoSchema = new mongoose.Schema({
     hash:{
         type : String,
         required : true
+    },
+    tags : {
+        type : Array,
+    },
+    genre :{
+        type : String,
     }
 });
 
@@ -71,7 +77,10 @@ function validate(video){
         description: Joi.string().min(5).max(2000).required(),
         uploader : Joi.string().min(5).max(200).required(),
         id : Joi.string().min(5).max(200).required(),
-        hash : Joi.string().min(32).max(32).required()
+        hash : Joi.string().min(32).max(32).required(),
+        genre : Joi.string().min(5).max(35).required(),
+        tags : Joi.array(),
+        isPrivate : Joi.bool()
     };
     return Joi.validate(video,schema);
 }

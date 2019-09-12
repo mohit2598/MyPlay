@@ -12,7 +12,7 @@ router.post('/login',(req,res,next) =>{
         if(user){
             req.login(user,(err) =>{
                 console.log('fuck hell');
-                res.send(req.user);
+                 res.redirect('/index')
             })
            
         }else{

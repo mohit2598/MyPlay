@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<% include partials/head1.ejs %>
+	<!-- This will include and link all the required js and css files -->
+
+	<link rel="stylesheet" href="/static/css/player.css">
+</head>
+
+<body>
+
+	<% include partials/navbar1.ejs %>
+	<div class="row">
+		<% include partials/sidebar.ejs %>
+		<div class="container col-sm-9 col-md-10 col-sm-offset-3 col-md-offset-3 " style="z-index: 999;position: relative;top:550px">
+			<!-- <link rel="stylesheet" href="/static/css/font-awesome/4.5.0/css/font-awesome.min.css"> -->
+			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+			<div class="container" style="position:absolute;top:0px">
+				<div class="vidcontainer">
+					<video id="myvid">
+						Your browser does not support the video tag.
+
+					</video>
+
+					<div class="topControl">
+						<div class="progress">
+							<span class="bufferBar"></span>
+							<span class="timeBar"></span>
+						</div>
+						<div class="time">
+							<span class="current"></span> /
+							<span class="duration"></span>
+						</div>
+					</div>
+
+					<div class="controllers">
+						<button class="btnPlay" title="Play/Pause video"></button>
+						<button class="prevvid disabled" title="Previous video"><i
+								class="fa fa-step-forward fa-rotate-180"></i></button>
+						<button class="nextvid" title="Next video"><i class="fa fa-step-forward"></i></button>
+						<button class="sound sound2 btn" title="Mute/Unmute sound"></button>
+						<div class="volume" title="Set volume">
+							<span class="volumeBar"></span>
+						</div>
+						<button class="btnFS " style="float:right" title="full screen"></button>
+						<button class="btnspeed " style="float:right" title="Video speed"><i
+								class="fa fa-gear"></i></button>
+						<ul class="speedcnt">
+							<li class="spdx50">1.5</li>
+							<li class="spdx25">1.25</li>
+							<li class="spdx1 selected">Normal</li>
+							<li class="spdx050">0.5</li>
+						</ul>
+						<button class="btnLight lighton " style="float:right" title="on/off light"><i
+								class="fa fa-lightbulb-o"></i></button>
+					</div>
+
+					<div class="bigplay" title="play the video"><i class="fa fa-play-circle-o"></i></div>
+					<div class="loading"><i class="fa fa-spinner fa-spin"></i></div>
+				</div>
+				<div class="videolist">
+					<nav class="vids">
+						<ul class="ml4  list flex flex-column list-reset" id="videoContainer">
+							<% videos.forEach( function( video ) { %>
+							<li data-videoid="<%= video.id %>" data-views="yet to store"
+								data-dateuploaded="<%= video.uploadTime %>" data-name="<%= video.title %>"> <a
+									class="link" href="/player/<%= video.id %>"><%= video.title %> </a></li>
+							<%  }) %>
+
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- <% include partials/comments.ejs %> -->
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="/static/js/bootstrap.min.js"></script>
+	<script src="/static/js/player.js"></script>
+	<!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+</body>
+
+
+</html>
