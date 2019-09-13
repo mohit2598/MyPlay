@@ -23,16 +23,14 @@ const videoSchema = new mongoose.Schema({
         default : Date.now()   //this will automatically add date into this field
     },
     //likes:{type:[{ type : ObjectId }],  }, not sure of syntax
-    /*likes:{
-        type:[String],
-        default:undefined,
-        unique:true,
+    likes:{
+        type:Number,
+        default:0
     },
     dislikes:{
-        type:[String],
-        default:undefined,
-        unique:true,
-    },*/
+        type:Number,
+        default:0
+    },
     uploader:{
         type:String,
     },

@@ -16,7 +16,7 @@ $(document).ready(function () {
         event.preventDefault();
 
         // change video source
-        $(vid).attr("src", $(this).attr("href"));
+        $(vid).attr("src", $(this).data('link'));
 
         // remouve class playing from unplayed video href
         $(".vids a").removeClass("playing");

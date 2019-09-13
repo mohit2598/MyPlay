@@ -2,8 +2,13 @@
 
 $(document).ready(function () {
     var vid = $('#myvid');
-
+    setVideoContents = function(id){
+        console.log(id);
+    }
     //default video source
+    window.currentPlayVideoId = $("a.link:first").data("id");
+    setVideoContents(window.currentPlayVideoId);
+
     $(vid).attr("src", $("a.link:first").attr("href"));
 
     // addClass playing to first video link
@@ -16,6 +21,9 @@ $(document).ready(function () {
         event.preventDefault();
 
         // change video source
+        window.currentPlayVideoId = $(this).data("id");
+        setVideoContents(window.currentPlayVideoId);
+
         $(vid).attr("src", $(this).attr("href"));
 
         // remouve class playing from unplayed video href
@@ -303,6 +311,9 @@ $(document).ready(function () {
 
     //previous video button
     $(".prevvid").click(function () {
+        window.currentPlayVideoId = $(".playing").parent().prev().children().data("id");
+        setVideoContents(window.currentPlayVideoId);                                            // trigger loading video contents
+
         $(vid).attr("src", $(".playing").parent().prev().children().attr("href"));
         vid[0].play();
         $(".playing").parent().prev().children().addClass("playing");
@@ -318,6 +329,9 @@ $(document).ready(function () {
 
     //previous video button
     $(".nextvid").click(function () {
+        window.currentPlayVideoId = $(".playing").parent().next().children().data("id");
+        setVideoContents(window.currentPlayVideoId);                                            // trigger loading video contents
+
         $(vid).attr("src", $(".playing").parent().next().children().attr("href"));
         vid[0].play();
         $(".playing").parent().next().children().addClass("playing");

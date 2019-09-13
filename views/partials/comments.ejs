@@ -1,6 +1,87 @@
+<style>
+    .like-content {
+        display: inline-block;
+        width: 100%;
+        margin: 40px 0 0;
+        padding: 40px 0 0;
+        font-size: 18px;
+        border-top: 10px dashed #eee;
+        text-align: center;
+    }
+
+    .like-content span {
+        color: #9d9da4;
+        font-family: monospace;
+    }
+
+    .like-content .btn-secondary {
+        display: block-inline;
+        margin: 40px auto 0px;
+        text-align: center;
+
+        border-radius: 3px;
+        box-shadow: 0 10px 20px -8px rgb(240, 75, 113);
+        padding: 10px 17px;
+        font-size: 18px;
+        cursor: pointer;
+        border: none;
+        outline: none;
+        color: #ffffff;
+        text-decoration: none;
+        -webkit-transition: 0.3s ease;
+        transition: 0.3s ease;
+    }
+
+    .like {
+        background: green
+    }
+
+    .dislike {
+        background: red
+    }
+
+    .like-content .btn-secondary:hover {
+        transform: translateY(-3px);
+    }
+
+    .like-content .btn-secondary .fa {
+        margin-right: 5px;
+    }
+
+    .animate-like {
+        animation-name: likeAnimation;
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+        animation-duration: 0.65s;
+    }
+
+    @keyframes likeAnimation {
+        0% {
+            transform: scale(30);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+</style>
+
 <div class="">
     <div class="row">
         <div class="col-sm-10 col-sm-offset-1" id="logout">
+            <div class="row">
+                <div class="col-sm-10 col-md-10">
+                    <div class="like-content">
+                        <button class="btn btn-xs btn-secondary like like-review" id="like">
+                            <i class="fa fa-thumbs-up " aria-hidden="true"></i> Like
+                        </button>
+
+                        <button class="btn btn-xs btn-secondary dislike like-review" id="dislike">
+                            <i class="fa fa-thumbs-down" aria-hidden="true"></i> Dislike
+                        </button>
+                    </div>
+                </div>
+            </div>
             <div class="page-header">
                 <h3 class="reviews">Leave your comment</h3>
             </div>
@@ -31,7 +112,7 @@
                                             <li class="aaaa">2014</li>
                                         </ul>
                                         <p class="media-comment">
-                                            Great snippet! Thanks for sharing.
+                                            Just a random comment
                                         </p>
                                         <a class="btn btn-info btn-circle text-uppercase" href="#" id="reply"><span
                                                 class="glyphicon glyphicon-share-alt"></span>
@@ -45,26 +126,31 @@
                         </ul>
                     </div>
                     <div class="tab-pane" id="add-comment">
-                        <form action="#" method="post" class="form-horizontal" id="commentForm" role="form">
+                        <div class="form-horizontal" id="">
                             <div class="form-group">
                                 <label for="email" class="col-sm-2 control-label">Comment</label>
                                 <div class="col-sm-10">
-                                    <textarea class="form-control" name="addComment" id="addComment"
+                                    <textarea class="form-control" name="addComment" id="comment_video"
                                         rows="5"></textarea>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-10">
-                                    <button class="btn btn-success btn-circle text-uppercase" type="submit"
-                                        id="submitComment"><span class="glyphicon glyphicon-send"></span> Summit
+                                    <button class="btn btn-success btn-circle text-uppercase" type=""
+                                        id="add_comment"><span class="glyphicon glyphicon-send"></span> Summit
                                         comment</button>
                                 </div>
                             </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    
+
+</script>
