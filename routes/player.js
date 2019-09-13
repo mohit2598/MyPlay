@@ -4,7 +4,6 @@ const express = require('express'),
 
 router.get('/:id', function(req, res) {
   const path = 'assets/'+ req.params.id + '.mp4'  // need to supplied here
-  console.log(path);
   const stat = fs.statSync(path)
   const fileSize = stat.size
   const range = req.headers.range

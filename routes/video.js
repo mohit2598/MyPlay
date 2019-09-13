@@ -8,6 +8,16 @@ var router = express.Router();
 const algorithm = 'sha256';
 const crypto = require('crypto');
 const { dbVideo, validate } = require('../dbModels/video');
+const Video = require('../controllers/video');
+
+router.post('/likeVideo',Video.likeVideo);
+router.post('/dislikeVideo',Video.dislikeVideo);
+router.post('/addComment',Video.addComment);
+router.post('/removeComment',Video.removeComment);
+router.post('/editComment',Video.editComment);
+router.post('/saveComment',Video.saveComment);
+router.post('/editVideo',Video.editVideo);
+router.post('/saveVideo',Video.saveVideo);
 
 router.get('/upload1', (req, res) => {
 	if (req.user) {
