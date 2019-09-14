@@ -7,14 +7,19 @@ const { dbLike } = require('../dbModels/like'),
 
 //this is to remove the comment
 //this is for adding comment on video
-var removeComment = async function (req, res, next) {
-
-
-    const result = await Comment.findByIdAndRemove(req.body.commentId);
-    if (result)
-        res.send("1");
-    else
-        res.send("-1");
+var removeComment = async function  (req, res, next) {
+    //res.send("hello");
+    if (!req.user) {
+        res.status(403).send('Unauthorized access');
+    }
+       
+        try{
+            let result = await dbComment.findOneAndRemove({userEmail : req.user.email,_id: req.body.commentId});
+            res.send('1');
+        }catch(ex){
+            console.log("Error in remove comment " + ex);
+            res.status(500).send('Internal Server Error');
+        }
 
     next();
 }
@@ -72,7 +77,7 @@ var editComment = async function (req, res, next) {
     try {
         var result = await dbComment.findOneAndUpdate({
             "_id": req.body.commentId,
-            "userEmail" : req.user.email
+            "userEmail": req.user.email
         },
             {
                 $set: { "content": req.body.content }

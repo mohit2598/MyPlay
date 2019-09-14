@@ -11,6 +11,7 @@ $(document).ready(function () {
                 // console.log('this is data ' + data);
                 console.log('this is status ' + status);
                 $("#likeCommmentId").html(data);
+                
             });
     }
     //default video source
