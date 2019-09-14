@@ -1,7 +1,7 @@
 
 const { dbLike } = require('../dbModels/like'),
     { dbDislike } = require('../dbModels/dislike'),
-    { dbComment} = require('../dbModels/comment'),
+    { dbComment } = require('../dbModels/comment'),
     { dbVideo, validate } = require('../dbModels/video'),
     mongoose = require('mongoose')
 
@@ -23,20 +23,21 @@ var addComment = async function (req, res, next) {
     if (!req.user) {
         res.status(400).send('Unauthorized');
     } else {
-        try{
+        try {
             console.log(req.body.content);
-        const dbcomment = new dbComment(
-            {
-                "userEmail": req.user.email,
-                "videoId": req.body.videoId,
-                "content": req.body.content,
-            });
-        const result = await dbcomment.save();
-        if (result)
-            res.send("1");
-        else
-            res.send("-1");
-        }catch(ex){
+            const dbcomment = new dbComment(
+                {
+                    "userEmail": req.user.email,
+                    "videoId": req.body.videoId,
+                    "content": req.body.content,
+                    "commenterName": req.user.name
+                });
+            const result = await dbcomment.save();
+            if (result)
+                res.send("1");
+            else
+                res.send("-1");
+        } catch (ex) {
             res.status(500).send('Server Error ' + ex);
         }
     }
@@ -69,19 +70,20 @@ var editComment = async function (req, res, next) {
 
     var validcomment;
     try {
-        validcomment = await Comment.findOne({
-            $and: [
-                { userEmail: "shashanksharma7874@gmail.com" },
-                { _id: req.body.commentId }]
-        });
+        var result = await dbComment.findOneAndUpdate({
+            "_id": req.body.commentId,
+            "userEmail" : req.user.email
+        },
+            {
+                $set: { "content": req.body.content }
+            });
+        res.send('1');
     } catch (exep) {
+        res.status(400).send("Unautorized access ");
         console.log(exep);
     }
 
-    if (validcomment)
-        res.send("1");
-    else
-        res.send("-1");
+
 
     next();
 }
@@ -290,9 +292,38 @@ var likeVideo = async function (req, res, next) {
 
 }
 
+var getComment = async function (req, res, next) {
+    if (!req.user) {
+        res.redirect('/');
+        res.end();
+    } else {
+        try {
+            email = req.user.email;
+            let comment = await dbComment.findOne({ _id: req.body.commentId, userEmail: req.user.email });
+            if (!comment) {
+                res.status(400).redirect('/');
+            } else {
+                res.send(comment.content);
+                res.end();
+            }
+        } catch (ex) {
+            console.log("Error in get comment ", ex);
+        }
+    }
+}
 
 
 
 
 //Do not forget to change them
-module.exports = { editVideo: editVideo, saveVideo: saveVideo, saveComment: saveComment, editComment: editComment, removeComment: removeComment, addComment: addComment, likeVideo: likeVideo, dislikeVideo: dislikeVideo };
+module.exports = {
+    editVideo: editVideo,
+    saveVideo: saveVideo,
+    saveComment: saveComment,
+    editComment: editComment,
+    removeComment: removeComment,
+    addComment: addComment,
+    likeVideo: likeVideo,
+    dislikeVideo: dislikeVideo,
+    getComment: getComment
+};

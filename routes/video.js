@@ -9,6 +9,11 @@ const algorithm = 'sha256';
 const crypto = require('crypto');
 const { dbVideo, validate } = require('../dbModels/video');
 const Video = require('../controllers/video');
+const moment = require('moment');
+const {dbComment} = require('../dbModels/comment');
+const {dbUser} = require('../dbModels/user');
+const {dbLike} = require('../dbModels/like');
+const {dbDislike} = require('../dbModels/dislike');
 
 router.post('/likeVideo',Video.likeVideo);
 router.post('/dislikeVideo',Video.dislikeVideo);
@@ -18,6 +23,7 @@ router.post('/editComment',Video.editComment);
 router.post('/saveComment',Video.saveComment);
 router.post('/editVideo',Video.editVideo);
 router.post('/saveVideo',Video.saveVideo);
+router.post('/getComment',Video.getComment);
 
 router.get('/upload1', (req, res) => {
 	if (req.user) {
@@ -27,6 +33,36 @@ router.get('/upload1', (req, res) => {
 	}
 
 })
+
+router.post('/getVideoDescription',async (req, res) => {
+	if(!req.user){
+		res.status(400).send('Unauthorized');
+	}else{
+		try{
+			_id = req.body._id;
+			console.log('received id is ' + _id)
+			let video = await dbVideo.findById(_id);
+			if(!video){
+				throw new Error("Video is not available");
+			}
+			let uploader = await dbUser.findOne({email: video.uploader});
+			let iLiked = await dbLike.findOne({videoId : _id,userEmail : req.user.email});
+			let iDisliked = await dbDislike.findOne({videoId : _id,userEmail : req.user.email});
+			let comments = await dbComment.find({videoId : _id});
+			console.log('This is comments ' + comments);
+			console.log("iLiked " + iLiked);
+			console.log('iDislikde '+ iDisliked);
+			res.render('partials/comments.ejs',{video : video,iLiked : iLiked,iDisliked : iDisliked,
+				uploader : uploader,comments : comments,moment : moment,userEmail:req.user.email});
+
+		}catch(ex){
+			console.log("There is an error " + ex);
+			res.send("Error " + ex.message);
+		}
+	}
+	
+
+});
 // router.post('/upload',(req, res, next) => {
 
 //     var hash = crypto.createHash(algorithm);
@@ -121,6 +157,7 @@ router.post('/upload', async (req, res) => {
 			console.log('success');
 		}
 		dbVideo.findOne({ hash: hash }, (err, oldvideo) => {
+			params['uploaderName'] = req.user.name;
 			if (!oldvideo) {
 				dbvideo = new dbVideo(params);
 				dbvideo.save((err, savedVideo) => {

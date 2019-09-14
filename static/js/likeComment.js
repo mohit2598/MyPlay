@@ -1,28 +1,28 @@
 //here retrieve the videoId and stringify this is for liking the video
 
+changeLikeButtons = function (a, b) {
+    if (a == 1) {
+        $("#like").css('background', 'green');
+        $("#like").html('<i class="fa fa-thumbs-up" aria-hidden="true"></i> You liked this')
+    }
+    if(a == 0){
+        $("#like").css('background', '#111');
+        $("#like").html('Like')
+    }
 
+    if(b == 1) {
+        $("#dislike").css('background', 'red');
+        $("#dislike").html('<i class="fa fa-thumbs-down" aria-hidden="true"></i> You disliked this')
+    }
+    if(b == 0){
+        $("#dislike").css('background', '#111');
+        $("#dislike").html('Dislike')
+    }
+}
 
 $("#like").click(function () {
 
-    changeLikeButtons = function (a, b) {
-        if (a == 1) {
-            $("#like").css('background', 'green');
-            $("#like").html('<i class="fa fa-thumbs-up" aria-hidden="true"></i> You liked this')
-        }
-        if(a == 0){
-            $("#like").css('background', '#111');
-            $("#like").html('Like')
-        }
-
-        if(b == 1) {
-            $("#dislike").css('background', 'red');
-            $("#dislike").html('<i class="fa fa-thumbs-down" aria-hidden="true"></i> You disliked this')
-        }
-        if(b == 0){
-            $("#dislike").css('background', '#111');
-            $("#dislike").html('Dislike')
-        }
-    }
+    
     var videoid = window.currentPlayVideoId;
     console.log(window.currentPlayVideoId);
     $.post("/video/likeVideo",

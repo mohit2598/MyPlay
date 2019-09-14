@@ -34,6 +34,9 @@ const videoSchema = new mongoose.Schema({
     uploader:{
         type:String,
     },
+    uploaderName : {
+        type : String
+    },
     /*comments:{
         type:[{type:ObjectId}],
     },*/
