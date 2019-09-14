@@ -2,25 +2,24 @@
     .like-content {
         display: inline-block;
         width: 100%;
-        margin: 40px 0 0;
-        padding: 40px 0 0;
         font-size: 18px;
         border-top: 10px dashed #eee;
-        text-align: center;
+
+        float: left;
     }
 
     .like-content span {
         color: #9d9da4;
         font-family: monospace;
+
     }
 
     .like-content .btn-secondary {
-        display: block-inline;
-        margin: 40px auto 0px;
-        text-align: center;
+        display: inline-block;
+
 
         border-radius: 3px;
-        box-shadow: 0 10px 20px -8px rgb(240, 75, 113);
+        box-shadow: 0 10px 20px -8px;
         padding: 10px 17px;
         font-size: 18px;
         cursor: pointer;
@@ -33,20 +32,23 @@
     }
 
     .like {
-        background: green
+        background: grey;
+        float: right;
     }
 
     .dislike {
-        background: red
+        background: grey;
+        float: right;
     }
 
+    /* 
     .like-content .btn-secondary:hover {
         transform: translateY(-3px);
     }
 
     .like-content .btn-secondary .fa {
         margin-right: 5px;
-    }
+    } */
 
     .animate-like {
         animation-name: likeAnimation;
@@ -68,21 +70,57 @@
 
 <div class="">
     <div class="row">
-        <div class="col-sm-10 col-sm-offset-1" id="logout">
+        <div class="col-sm-10" id="">
+            <div class="title">
+                <h4><strong><%= video.title %> </strong></h4>
+            </div>
             <div class="row">
                 <div class="col-sm-10 col-md-10">
-                    <div class="like-content">
-                        <button class="btn btn-xs btn-secondary like like-review" id="like">
-                            <i class="fa fa-thumbs-up " aria-hidden="true"></i> Like
-                        </button>
-
+                    <div class="like-content" style="border: 1px solid black">
+                        <span> 34 Views </span>
+                        <span> uploaded on : <%=  moment(video.uploadTime).format( 'MM-DD-YYYY') %></span>
+                        <% if(iDisliked) { %>
                         <button class="btn btn-xs btn-secondary dislike like-review" id="dislike">
                             <i class="fa fa-thumbs-down" aria-hidden="true"></i> Dislike
                         </button>
+                        <script>
+                            $("#dislike").css('background', 'red');
+                            $("#dislike").html('<i class="fa fa-thumbs-down" aria-hidden="true"></i> You disliked this')
+                        </script>
+                        <% } else {%>
+                        <button class="btn btn-xs btn-secondary dislike like-review" id="dislike">
+                            <i class="fa fa-thumbs-down" aria-hidden="true"></i> Dislike
+                        </button>
+                        <% } %>
+                        <% if(iLiked) { %>
+                        <button class="btn btn-xs btn-secondary like like-review" id="like">
+                            <i class="fa fa-thumbs-up " aria-hidden="true"></i> Like
+                        </button>
+                        <script>
+                            $("#like").css('background', 'green');
+                            $("#like").html('<i class="fa fa-thumbs-up" aria-hidden="true"></i> You liked this')
+                        </script>
+                        <% } else { %>
+                        <button class="btn btn-xs btn-secondary like like-review" id="like">
+                            <i class="fa fa-thumbs-up " aria-hidden="true"></i> Like
+                        </button>
+                        <% }%>
+                        <span style="float: right"> three dots</span>
                     </div>
+
                 </div>
+
             </div>
-            <div class="page-header">
+            <div class="uploded by">
+                <span> uploaded By : <a href="/user/id/<%= video.uploader %>"> <%= video.uploaderName %> </a></span>
+
+            </div>
+            <div class="description">
+                <article>
+                    <%= video.description %>
+                </article>
+            </div>
+            <div class="page-header" style="margin-top:13%">
                 <h3 class="reviews">Leave your comment</h3>
             </div>
             <div class="comment-tabs">
@@ -97,32 +135,40 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="comments-logout">
                         <ul class="media-list">
-                            <li class="media">
-                                <a class="pull-left" href="#">
-                                    <img class="media-object img-circle"
-                                        src="https://s...content-available-to-author-only...s.com/uifaces/faces/twitter/dancounsell/128.jpg"
-                                        alt="profile">
+                            <% comments.forEach(function(comment){ %>
+                            <li class="media" data-_id="<%= comment._id %>1" style="position: relative">
+                                <a class="pull-left" href="/user/<%= comment.userEmail%>">
+                                    <img class="media-object img-circle" src="/static/images/user.png" alt="profile">
                                 </a>
                                 <div class="media-body">
                                     <div class="well well-lg">
-                                        <h4 class="media-heading text-uppercase reviews">Marco </h4>
+                                        <h4 class="media-heading text-uppercase reviews"><%= comment.commenterName %>
+                                        </h4>
                                         <ul class="media-date text-uppercase reviews list-inline">
-                                            <li class="dd">22</li>
-                                            <li class="mm">09</li>
-                                            <li class="aaaa">2014</li>
+                                            <%= moment(comment.uploadTime).format( 'MM-DD-YYYY') %>
                                         </ul>
-                                        <p class="media-comment">
-                                            Just a random comment
+                                        <p class="media-comment" id="<%= comment._id %>" data-_id="<%= comment._id %>">
+                                            <%= comment.content %>
                                         </p>
-                                        <a class="btn btn-info btn-circle text-uppercase" href="#" id="reply"><span
+                                        <!-- <a class="btn btn-info btn-circle text-uppercase" href="#" id="reply"><span
                                                 class="glyphicon glyphicon-share-alt"></span>
                                             Reply</a>
                                         <a class="btn btn-warning btn-circle text-uppercase" data-toggle="collapse"
                                             href="#replyOne"><span class="glyphicon glyphicon-comment"></span> 2
-                                            comments</a>
+                                            comments</a> -->
                                     </div>
                                 </div>
+                                <% if(userEmail == comment.userEmail) { %>
+                                <div class="" style="position: absolute; top :0px ;right:0px">
+                                    <a commentid="<%= comment._id %>" class="editCommentLink" style="color:#bebebe;"
+                                        href="#">Edit</a>
+                                    <span> | </span>
+                                    <a commentid="<%= comment._id %>" class="deleteCommentLink" style="color:#bebebe;"
+                                        href="#">Delete</a>
+                                </div>
+                                <% } %>
                             </li>
+                            <% }) %>
                         </ul>
                     </div>
                     <div class="tab-pane" id="add-comment">
@@ -138,7 +184,7 @@
                             <div class="form-group">
                                 <div class="col-sm-offset-2 col-sm-10">
                                     <button class="btn btn-success btn-circle text-uppercase" type=""
-                                        id="add_comment"><span class="glyphicon glyphicon-send"></span> Summit
+                                        id="add_comment"><span class="glyphicon glyphicon-send"></span> Submit
                                         comment</button>
                                 </div>
                             </div>
@@ -150,7 +196,65 @@
     </div>
 </div>
 
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Edit Ur Content</h4>
+            </div>
+            <div class="modal-body">
+                <textarea style="width:100%" id="edittedComment">
+
+              </textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                
+                <button type="button" id="submitEditComment" class="btn btn-default">Submit</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="/static/js/likeComment.js"></script>
 <script>
-    
+    $("a.editCommentLink").click(function () {
+        var commentId = $(this).attr("commentId");
+        console.log(commentId);
+        $.post('/video/getComment', { commentId: commentId }, (result, status) => {
+            if (status != 'success') {
+                console.log(err);
+                alert(status);
+            } else {
+                //alert("hello");
+                $("#edittedComment").val(result);
+                $("#myModal").modal('show');
+                $('#submitEditComment').click(function () {
+                    content = $("#edittedComment").val();
+                    $.post('/video/editComment', { content: content, commentId: commentId }, (result, status) => {
+                        console.log(status);
+                    })
+                })
+            }
+        })
+    })
+    $("a.deleteCommentLink").click(function () {
+        if(confirm('Are you sure you want to delete this')){
+            var commentId = $(this).attr("commentId");
+          
+            $.post('/video/removeComment', {commentId: commentId }, (result, status) => {
+                if(result == '1'){
+                    alert('Successfully deleted your comment');
+                }else{
+                    alert("Cannot delete comment " );
+                }
+            })
+            
+        }
+    })
 
 </script>

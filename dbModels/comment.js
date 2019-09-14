@@ -21,6 +21,10 @@ const commentSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,   //this will automatically add date into this field
     },
+    commenterName : {
+        type : String,
+        required : true
+    }
 });
 
 
