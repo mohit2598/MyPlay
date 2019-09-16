@@ -68,7 +68,8 @@ function validate(user){
         email: Joi.string().min(8).max(50).required(),
         password: Joi.string().min(5).max(50).required(),
         contactNo:Joi.string().min(10).max(10),
-        name:Joi.string().min(5).max(50).required()
+        name:Joi.string().min(5).max(50).required(),
+        token : Joi.string().min(40).max(40).required()
     };
     return Joi.validate(user,schema);
 }

@@ -10,7 +10,7 @@ var signup = async function(req, res, next){
             email: req.body.email,
             password: req.body.password,
             name: req.body.name,
-            contactNo: req.body.contactNo
+            token : req.body.token
         };
     // console.log("reach");
     var newUser = new User(params);
