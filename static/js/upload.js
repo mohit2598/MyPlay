@@ -4,6 +4,7 @@ function _(el) {
 
 function uploadFile() {
     var file = _("videoFile").files[0];
+    var file2 = _("templateFile").files[0];
     var title = _("title").value;
     var description = _("description").value;
     var tags = [];
@@ -18,6 +19,7 @@ function uploadFile() {
 
     var formdata = new FormData();
     formdata.append("file1", file);
+    formdata.append("file2", file2);
     formdata.append("title", title);
     formdata.append("description", description);
     formdata.append("tags", tags);
@@ -106,6 +108,13 @@ $(document).ready(function () {
                 validators: {
                     notEmpty: {
                         message: 'Please select a file to upload'
+                    }
+                }
+            },
+            template_upload: {
+                validators: {
+                    notEmpty: {
+                        message: 'Please select a template to upload'
                     }
                 }
             }

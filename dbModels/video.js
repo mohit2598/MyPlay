@@ -33,9 +33,11 @@ const videoSchema = new mongoose.Schema({
     },
     uploader:{
         type:String,
+        required : true
     },
     uploaderName : {
-        type : String
+        type : String,
+        required : true
     },
     /*comments:{
         type:[{type:ObjectId}],
@@ -55,6 +57,10 @@ const videoSchema = new mongoose.Schema({
         type : String,
         required : true
     },
+    thumbnailName : {
+        type : String,
+        required : true
+    },
     hash:{
         type : String,
         required : true
@@ -64,6 +70,10 @@ const videoSchema = new mongoose.Schema({
     },
     genre :{
         type : String,
+    },
+    views : {
+        type : Number,
+        default : 0
     }
 });
 
@@ -81,7 +91,9 @@ function validate(video){
         hash : Joi.string().min(32).max(32).required(),
         genre : Joi.string().min(5).max(35).required(),
         tags : Joi.array(),
-        isPrivate : Joi.bool()
+        isPrivate : Joi.bool(),
+        thumbnailName : Joi.string().min(5).max(200).required(),
+        uploaderName : Joi.string().min(5).max(200).required()
     };
     return Joi.validate(video,schema);
 }
