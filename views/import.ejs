@@ -25,7 +25,7 @@
                 <legend><strong>Upload your video</strong></legend>
 
                 <!-- Text input-->
-
+                <p id="videoId" data-id=<%= _id %>> </p>
                 <div class="form-group">
                     <label class="col-md-4
                      control-label">Title</label>
@@ -94,16 +94,6 @@
 
                 <div class="form-group">
                     <label class="col-md-4
-                        control-label">Select video file</label>
-                    <div class="col-md-4 inputGroupContainer">
-                        <div class="input-group">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                            <input type="file" name="video_upload" class="form-control" id="videoFile"><br>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-md-4
                         control-label">Select template pic</label>
                     <div class="col-md-4 inputGroupContainer">
                         <div class="input-group">
@@ -112,6 +102,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label class="col-md-4
                         control-label">Tags</label>
@@ -129,8 +120,9 @@
                 <p id="loaded_n_total"></p>
 
                 <!-- Success message -->
-                <div class="alert alert-success" role="alert" id="success_message">Success <i
-                        class="glyphicon glyphicon-thumbs-up"></i> Thanks for uploading video
+                <div class="alert alert-success" role="alert" id="success_message">
+                </div>
+                <div class="alert alert-success" role="alert" id="success_message2">
                 </div>
 
                 <!-- Button -->
@@ -138,7 +130,7 @@
                     <label class="col-md-4 control-label"></label>
                     <div class="col-md-4">
                         <button type="submit" class="btn btn-warning"> <span class=" glyphicon glyphicon-send">
-                                Upload</span></button>
+                                Import</span></button>
                     </div>
                 </div>
                 <!-- <div class="tags-container">
@@ -160,7 +152,7 @@
 </body>
 <script src="/static/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/static/js/bootstrap-validator/0.5.3/js/bootstrapValidator.js"></script>
-<script type="text/javascript" src="/static/js/upload.js"></script>
+<script type="text/javascript" src="/static/js/import.js"></script>
 
 <% include partials/footer.ejs %>
 

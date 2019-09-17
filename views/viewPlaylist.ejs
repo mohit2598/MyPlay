@@ -17,10 +17,10 @@
                     <img src="/static/images/t2.jpg">
                 </div>
                 <div class="title">
-                   <h1> Playlist Name </h1>
+                   <h1> <%= playlistInfo.playlistName %> </h1>
                 </div>
                 <div class="some-info">
-                    2 videos . creator
+                    <%= playlistInfo.videoCount %> videos . <%= playlistInfo.authorName %>
                 </div>
                 <div class="edit-options">
                     <button class="btn btn-primary"> Delete Playlist</button>
@@ -37,9 +37,9 @@
                                 
                         </div>
                  <ul class="sortable" id="videoContainer" >
-                    <% numArray.forEach(function(i){ %>
+                    <% videos.forEach(function(item){ %>
                         <li>
-                            <%- include('partials/playlistVideoPallete.ejs',{i:i}); %>
+                            <%- include('partials/playlistVideoPallete.ejs',{item:item , playlistInfo:playlistInfo}); %>
                             <div class="clear-float"></div>
                         </li>
                     <% }); %> 

@@ -49,7 +49,7 @@ router.get('/id/:pid', async function (req, res) {
 			if (a.orderNum > b.orderNum) return 1;
 			return -1;
 		});
-		//console.log(songsWithExtraInfo);
+		console.log(songsWithExtraInfo);
 		res.render('playlist2.ejs', { videos: songsWithExtraInfo ,user : req.user});
 	} catch (err) {
 		throw err;
@@ -96,6 +96,7 @@ router.post('/createNew', async function (req, res) {    // API to add new playl
 		let nplay = new Modals.playlist({
 			playlistName: req.body.name,
 			authorId: req.user._id,
+			authorName : req.user.name,
 			videoCount: 1,
 			privacy: req.body.privacy
 		});
@@ -152,6 +153,9 @@ router.post('/addToPlaylist', async function (req, res) {   // API to add a vide
 				});
 				let savedObj = await nEntry.save();
 				res.send("added succesfully");
+			}
+			else{
+				res.send("already added");
 			}
 		}
 	} catch (error) {
@@ -263,17 +267,16 @@ router.post('/orderPlaylist', async function (req, res) {
 
 
 router.get('/view/:playlistId',async function(req,res){
-	let pid = req.params.pid;
+	let pid = req.params.playlistId;
 	try {
-		let playlistInfo = await Modals.playlist.findOne({
-			playlistId : pid
-		});
-
+		let playlistInfo = await Modals.playlist.findById(pid);
+		console.log("playlist info ::"+ playlistInfo);
 		let songs = await Modals.playlistContent.find(
 			{
 				playlistId: pid
 			}
 		);
+		console.log("songs info::"+songs);
 		let songsWithExtraInfo = await VideosModal.dbVideo.populate(songs, { path: 'videoId', model: 'Video' });
 		// console.log(songsWithExtraInfo+"::this is before sorting");
 		songsWithExtraInfo.sort((a, b) => {
@@ -281,8 +284,9 @@ router.get('/view/:playlistId',async function(req,res){
 			if (a.orderNum > b.orderNum) return 1;
 			return -1;
 		});
-		//console.log(songsWithExtraInfo);
-		res.render('viewPlaylist.ejs', {playlistInfo: playlistInfo, videos: songsWithExtraInfo , numArray:[1,2,3,4,5,6,7,8,9], user: req.user});
+
+		console.log(songsWithExtraInfo);
+		res.render('viewPlaylist.ejs', {playlistInfo: playlistInfo, videos: songsWithExtraInfo , user: req.user});
 	} catch (err) {
 		throw err;
 	}
