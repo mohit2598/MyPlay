@@ -1,81 +1,38 @@
 <% list.forEach(function(item) { %>
-<article class="search-result row border border-primary">
-    <div class="col-xs-12 col-sm-12 col-md-3">
-        <a href="#" title="" class="thumbnail"><img src="/assets/<%= item.thumbnailName %>.png" alt="" /></a>
-    </div>
-    <div class="col-xs-12 col-sm-12 col-md-2">
-        <ul class="meta-search">
-            <li><i class="glyphicon glyphicon-calendar"></i> <span>
-                    <%=  moment(item.uploadDate).format( 'MM-DD-YYYY') %>; </span></li>
-            <li><i class="glyphicon glyphicon-time"></i> <span>4:28 pm</span></li>
-            <li><i class="glyphicon glyphicon-tags"></i> <span>People</span></li>
-        </ul>
-    </div>
-    <div class="col-xs-12 col-sm-12 col-md-6 excerpet" style="position: relative;">
-        <h3><a href="/play/<%= item._id %>" title=""> <%= item.title %> </a></h3>
-        <p><%= item.description %></p>
-        
-        <div class="" style="position: absolute; top :0px ;right:0px">
-            <div class="more">
-                <button id="more-btn" class="more-btn">
-                    <span class="more-dot"></span>
-                    <span class="more-dot"></span>
-                    <span class="more-dot"></span>
-                </button>
-                <div class="more-menu">
-                    <div class="more-menu-caret">
-                        <div class="more-menu-caret-outer"></div>
-                        <div class="more-menu-caret-inner"></div>
-                    </div>
-                    <ul class="more-menu-items" tabindex="-1" role="menu" aria-labelledby="more-btn" aria-hidden="true">
-                        <li class="more-menu-item" role="presentation">
-                            <button type="button" class="more-menu-btn" role="menuitem">Add to playist</button>
-                        </li>
-                        <li class="more-menu-item" role="presentation">
-                            <button type="button" class="more-menu-btn" role="menuitem">Watch Later</button>
-                        </li>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+
+
+<div class="col-md-12 search-video-container">
+    <div class="col-md-3 video-thumbnail">
+        <a href="/play/<%= item._id %>"><img src="/assets/<%= item.thumbnailName %>.png"></a>
+        <div class="time">
+            <p>3:04</p>
+        </div>
+        <div class="clck">
+            <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
         </div>
     </div>
-    <div class="col-md-1"></div>
-    <span class="clearfix borda"></span>
-    <br>
-    <br>
-</article>
+    <div class="col-md-9 playlist-video-info">
+        <a href="/play/<%= item._id %>" class="title title-info">
+            <h3><%= item.title %></h3>
+        </a>
+        <div class="description"><%= item.description %> </div>
+        <div class="author"><a href="#"><%= item.uploader %></a></div>
+    </div>
+    <div class="extra-options-search-button"><span><i class="fa fa-ellipsis-v"></i></span></div>
+    <div class="extra-options-container">
+        <div class="options">
+            <span class="fa fa-clock-o"></span> <span>Watch Later</span>
+        </div>
+        <div class="options" onclick="addThisToPlaylist(this)" data-videoid="5d768b1979143137e0d0471e">
+            <span class="fa fa-server"></span><span> Add to Playlist</span>
+        </div>
+        <div class="options">
+            <span class="fa fa-clone"></span> <span>Import (only if not yours)</span>
+        </div>
+        <div class="options">
+            <span class="fa fa-flag"></span> <span> Report</span>
+        </div>
+    </div>
+</div>
 
-<% }) %>
-<!-- closing tag for search  -->
-
-<script>
-    var el = document.querySelector('.more');
-    var btn = el.querySelector('.more-btn');
-    var menu = el.querySelector('.more-menu');
-    var visible = false;
-
-    function showMenu(e) {
-        e.preventDefault();
-        if (!visible) {
-            visible = true;
-            el.classList.add('show-more-menu');
-            menu.setAttribute('aria-hidden', false);
-            document.addEventListener('mousedown', hideMenu, false);
-        }
-    }
-
-    function hideMenu(e) {
-        if (btn.contains(e.target)) {
-            return;
-        }
-        if (visible) {
-            visible = false;
-            el.classList.remove('show-more-menu');
-            menu.setAttribute('aria-hidden', true);
-            document.removeEventListener('mousedown', hideMenu);
-        }
-    }
-
-    btn.addEventListener('click', showMenu, false);
-</script>
+<% }); %>

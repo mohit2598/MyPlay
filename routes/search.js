@@ -8,7 +8,7 @@ router.get('/query',async function(req, res) {
    console.log(query);
     var list = await getSearchResult(query);
     console.log(list);
-    res.render('searchResults.ejs',{list : list,moment : moment,user : req.user});
+    res.render('searchResults.ejs',{list : list,moment : moment,user : req.user, searchText:query});
 })
 
 module.exports = router;

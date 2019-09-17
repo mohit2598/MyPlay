@@ -55,7 +55,7 @@ $("#dislike").click(function () {
             else if (data.code == -1)
                 changeLikeButtons(data.likes, data.dislikes, 0, 0);
             else
-                cchangeLikeButtons(data.likes, data.dislikes, 0, 1);
+                changeLikeButtons(data.likes, data.dislikes, 0, 1);
         });
 });
 
@@ -74,7 +74,7 @@ $("#add_comment").click(function () {
             if (data == 1) {
                 alert("you added a comment on video");
                 content: document.getElementById("comment_video").value;
-                $("#dummy").before('<li class="media" style="position: relative"> <a class="pull-left" > <img class="media-object img-circle" src="/static/images/user.png" alt="profile" </a> <div class="media-body"> <div class="well well-lg"> <h4 class="media-heading text-uppercase reviews"> </h4> <ul class="media-date text-uppercase reviews list-inline"></ul><p class="media-comment" id="" data-_id=""> ' +  content + '</p></div></div></li>')
+              //  $("#dummy").before('<li class="media" style="position: relative"> <a class="pull-left" > <img class="media-object img-circle" src="/static/images/user.png" alt="profile" </a> <div class="media-body"> <div class="well well-lg"> <h4 class="media-heading text-uppercase reviews"> </h4> <ul class="media-date text-uppercase reviews list-inline"></ul><p class="media-comment" id="" data-_id=""> ' +  content + '</p></div></div></li>')
                 document.getElementById("comment_video").value = '';
             }
             else if (data == -1)

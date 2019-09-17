@@ -459,6 +459,7 @@ a.btn.btn-primary.btn-lg.see-button.hvr-shutter-out-horizontal {
 }
 .resent-grid {
 	padding-left: 0.1em;
+	margin-bottom :1em;
 }
 .resent-grid-img{
 	position:relative;
@@ -475,7 +476,7 @@ a.btn.btn-primary.btn-lg.see-button.hvr-shutter-out-horizontal {
 }
 .time{
   position: absolute;
-  top: 92% !important;
+  top: 84% !important;
   right: 0%;
   display: block;
 }
@@ -507,7 +508,7 @@ a.btn.btn-primary.btn-lg.see-button.hvr-shutter-out-horizontal {
 .clck {
   position: absolute;
   bottom: 1%;
-  right: 9%;
+  right: 18%;
   display: block;
   z-index: 9;
 }
