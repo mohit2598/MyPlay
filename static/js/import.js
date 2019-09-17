@@ -3,32 +3,34 @@ function _(el) {
 }
 
 function uploadFile() {
-    var file = _("videoFile").files[0];
+    //var file = _("videoFile").files[0];
+    var id = _('videoId').dataset.id;
     var file2 = _("templateFile").files[0];
     var title = _("title").value;
     var description = _("description").value;
     var tags = [];
     var genre = _('genre').value;
     var isPrivate = false;
-    let temp = false || parseInt($("input[name=isPrivate]:checked").val(), 10);
-    if (temp == 1) isPrivate = true;
-    console.log(isPrivate);
-    console.log(typeof (isPrivate));
-    $("span.tag").each(function () {
-        tags.push($(this).text());
+    let temp  = false || parseInt($("input[name=isPrivate]:checked").val(),10);
+    if(temp==1) isPrivate=true;
+    console.log(id)
+    // console.log(isPrivate);
+    // console.log(typeof(isPrivate));
+    $("span.tag").each(function(){
+         tags.push($(this).text());
     });
-    console.log(tags);
-    console.log(tags);
+    // console.log(tags);
+    // console.log(tags);
 
     var formdata = new FormData();
-    formdata.append("file1", file);
+    // formdata.append("file1", file);
     formdata.append("file2", file2);
     formdata.append("title", title);
     formdata.append("description", description);
     formdata.append("tags", tags);
     formdata.append("genre", genre);
     formdata.append("isPrivate", isPrivate);
-
+    // formdata.append("_id",_id);
 
     // console.log(formdata);
     var ajax = new XMLHttpRequest();
@@ -36,19 +38,25 @@ function uploadFile() {
     ajax.addEventListener("load", completeHandler, false);
     ajax.addEventListener("error", errorHandler, false);
     ajax.addEventListener("abort", abortHandler, false);
-    ajax.onreadystatechange = function () {
+    ajax.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            if (this.responseText.code == 1) {
-                $("#success_message").html('<iclass="glyphicon glyphicon-thumbs-up">' + this.responseText.message);
-                setTimeout(() => {
+           let temp = JSON.parse(this.responseText);
+            if(temp.code == '1'){
+                $("#success_message2").html('<i class="glyphicon glyphicon-thumbs-up"> </>' +temp.message);
+                setTimeout(()=>{
                     window.location = '/';
-                }, 3000);
-            } else {
-                $("#success_message").html('<iclass="glyphicon glyphicon-thumbs-down">' + this.responseText.message);
+                },3000);
+            }else{
+                $("#success_message2").html('<i class="glyphicon glyphicon-thumbs-down"> </>' + temp.message);
             }
         }
-    };
-    ajax.open("POST", "/video/upload");
+        else{
+            console.log(this.readyState);
+        }
+      };
+    var url = "/video/import/" + id;
+    console.log(url);
+    ajax.open("POST",url );
     ajax.send(formdata);
 }
 

@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 let playlistSchema = new Schema({
   playlistName : String,
   authorId : String,
+  authorName : String,
   videoCount : Number,
   privacy : String
 });

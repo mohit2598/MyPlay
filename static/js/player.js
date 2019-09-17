@@ -3,15 +3,15 @@
 $(document).ready(function () {
     var vid = $('#myvid');
     setVideoContents = function (videoid) {
-        $.post("/video/getVideoDescription",{
-                //here the id of video id required which is currently running
-                _id: videoid,
-            },
+        $.post("/video/getVideoDescription", {
+            //here the id of video id required which is currently running
+            _id: videoid,
+        },
             function (data, status) {
                 // console.log('this is data ' + data);
                 console.log('this is status ' + status);
                 $("#likeCommmentId").html(data);
-                
+
             });
     }
     //default video source
@@ -302,15 +302,18 @@ $(document).ready(function () {
                 'opacity': 0.9,
                 'top': 0,
                 'left': 0,
-                'z-index': 99
+                'z-index': 10000
             });
-            $('.vidcontainer').css({
-                'z-index': 1000
+            $('.newVidContainer').css({
+                'z-index': 100000
             });
         }
         //if lighton, remove overlay
         else {
             $('.overlay').remove();
+            $('.newVidContainer').css({
+                'z-index': 1
+            });
         }
     });
 
@@ -320,16 +323,19 @@ $(document).ready(function () {
 
     //previous video button
     $(".prevvid").click(function () {
-        window.currentPlayVideoId = $(".playing").parent().prev().children().data("id");
-        setVideoContents(window.currentPlayVideoId);                                            // trigger loading video contents
-
+        if ($(".ml4 li:first a").hasClass("playing")) {
+            // do not trigger loading video contents
+        } else {
+            window.currentPlayVideoId = $(".playing").parent().prev().children().data("id");
+            setVideoContents(window.currentPlayVideoId);                                            // trigger loading video contents
+        };
         $(vid).attr("src", $(".playing").parent().prev().children().attr("href"));
         vid[0].play();
         $(".playing").parent().prev().children().addClass("playing");
         $(".playing:last").removeClass("playing");
         $('.btnPlay').addClass('paused');
         $(".nextvid").removeClass("disabled");
-        if ($("a.link:first").hasClass("playing")) {
+        if ($(".ml4 li:first a").hasClass("playing")) {
             $(this).addClass("disabled");
         } else {
             $(this).removeClass("disabled");
@@ -338,17 +344,25 @@ $(document).ready(function () {
 
     //previous video button
     $(".nextvid").click(function () {
-        window.currentPlayVideoId = $(".playing").parent().next().children().data("id");
-        setVideoContents(window.currentPlayVideoId);                                            // trigger loading video contents
+        if ($(".ml4 li:last a").hasClass("playing")) {
+            // do not trigger loading video contents
+        } else {
+            window.currentPlayVideoId = $(".playing").parent().next().children().data("id");
+            setVideoContents(window.currentPlayVideoId);                                            // trigger loading video contents
+        };
 
+        console.log('next video ' + $(".playing").parent().next().children());
         $(vid).attr("src", $(".playing").parent().next().children().attr("href"));
         vid[0].play();
         $(".playing").parent().next().children().addClass("playing");
         $(".playing:first").removeClass("playing");
         $('.btnPlay').addClass('paused');
         $(".prevvid").removeClass("disabled");
-        if ($("a.link:last").hasClass("playing")) {
+        //var dom = $("#videoContainer");
+        console.log($("#videoContainer li:last a"));
+        if ($(".ml4 li:last a").hasClass("playing")) {
             $(this).addClass("disabled");
+            console.log("fine no problem");
         } else {
             $(this).removeClass("disabled");
         };
