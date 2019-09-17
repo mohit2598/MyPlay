@@ -14,7 +14,8 @@ module.exports = async function(str){
         minMatchCharLength: 1,
         keys: [
         "title",
-        "description"
+        "description",
+        "tags"
     ]
     };
    // console.log(list);

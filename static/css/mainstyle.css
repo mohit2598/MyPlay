@@ -3,6 +3,90 @@ body{
   padding: 10px;
 
 }
+
+.checkbox{
+  padding:9px;
+  margin:0;
+}
+
+.col-md-2.resent-grid.recommended-grid.slider-top-grids:hover .extra-options-button{
+  display: block;
+}
+
+.extra-options-button a{
+  text-decoration :none;
+  width: 10px;
+}
+
+.extra-options-button a:hover{
+  cursor: pointer;
+}
+
+.extra-options-button{
+  display: none;
+  font-size: 2em;
+  position : absolute;
+  top : 7em;
+  left : 9em;
+}
+
+.extra-options-container .options{
+  font-size: 1.5em;
+  padding :3px 10px;
+}
+
+.extra-options-container .options:hover {
+  background-color: #dbdbdbf2;
+  cursor: pointer;
+}
+
+.extra-options-container {
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 3px 8px #222;
+  overflow: visible;
+  position: absolute;
+  top: 17em;
+  left : 16em;
+  color: #444;
+  z-index: 2;
+  width:77%;
+  display: none;
+  padding: 7px 0;
+}
+
+.playlistCheckbox {
+  font-size: x-large;
+}
+
+/* #videoContainer {
+  margin : 0;
+  list-style: none;
+  padding-left:15px;
+  font-size: large;
+}
+
+#videoContainer>li:hover{
+  background-color: #9e9ef5;
+  font-weight:600;
+  cursor: pointer;
+}
+#videoContainer>li {
+  padding: 5px;
+}
+
+.playlist-and-video-container{
+  position: relative;
+  top: 85px;
+  left: 17vw;
+  width: 80vw;
+  /* margin: 10px; */
+  /* padding: 10px; */
+  /* height: 100%;
+}  */
+
+
+
 .myNewVideoContainer{
   border: 5px solid black;
   width: 79vw;height: 35vw;

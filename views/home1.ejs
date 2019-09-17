@@ -35,19 +35,19 @@
                         <script src="/static/js/jquery.magnific-popup.js" type="text/javascript"></script>
                         <!--//pop-up-box -->
                         <script>
-                            $("#verifyEmailSubmit").click(() => {
+                            fun2 = () => {
                                 email = $("#email").val()
                                 console.log(email);
                                 $.post('/user/signup/checkEmailAvl', { email: email }, (data, status) => {
                                     if (data == 1) {
-                                        $("message").html('<strong>Check ur email</strong>')
+                                        $("#message").html('<strong>Check ur email</strong>')
                                     } else if (data == 0) {
-                                        $('message').html('<strong>This email is already taken</strong>');
+                                        $('#message').html('<strong>This email is already taken</strong>');
                                     } else {
-                                        $("message").html('<strong>Invalid email</strong>')
+                                        $("#message").html('<strong>Invalid email</strong>')
                                     }
                                 })
-                            })
+                            }
                         </script>
 
                         <div id="small-dialog2" class="mfp-hide">
@@ -90,7 +90,7 @@
                                         <div class="form-group">
                                             <label class="col-md-4 control-label"></label>
                                             <div class="col-md-4">
-                                                <button id="verifyEmailSubmit" type="button" class="btn btn-warning">
+                                                <button id="verifyEmailSubmit"  onclick="fun2()" type="button" class="btn btn-warning">
                                                     <span class=" glyphicon glyphicon-send">
                                                         Continue</span></button>
                                             </div>
@@ -157,7 +157,8 @@
                                         <div class="form-group">
                                             <label class="col-md-4 control-label"></label>
                                             <div class="col-md-4">
-                                                <button id="forgotEmailSubmit" onclick="fun()" type="button" class="btn btn-warning">
+                                                <button id="forgotEmailSubmit" onclick="fun()" type="button"
+                                                    class="btn btn-warning">
                                                     <span class=" glyphicon glyphicon-send">
                                                         Continue</span></button>
                                             </div>

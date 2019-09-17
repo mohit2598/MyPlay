@@ -1,65 +1,76 @@
+
 <div class="col-sm-3 col-md-2 sidebar">
     <div class="top-navigation">
         <div class="t-menu">MENU</div>
         <div class="t-img">
-            <img src="images/lines.png" alt="" />
+            <img src="/static/images/lines.png" alt="" />
         </div>
         <div class="clearfix"> </div>
     </div>
         <div class="drop-navigation drop-navigation">
             <ul class="nav nav-sidebar">
-            <li class="active"><a href="index.html" class="home-icon"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
-            <li><a href="shows.html" class="user-icon"><span class="glyphicon glyphicon-home glyphicon-blackboard" aria-hidden="true"></span>My Videos</a></li>
-            <li><a href="history.html" class="sub-icon"><span class="glyphicon glyphicon-home glyphicon-hourglass" aria-hidden="true"></span>My Playlists</a></li>
-            <!-- <li><a href="#" class="menu1"><span class="glyphicon glyphicon-film" aria-hidden="true"></span>Movies<span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></a></li>
+            <li class="active"><a href="/index" class="home-icon"><span class="glyphicon glyphicon-home" aria-hidden="true"></span>Home</a></li>
+            <li><a href="/history" class="sub-icon"><span class="glyphicon glyphicon-home glyphicon-hourglass" aria-hidden="true"></span>History</a></li>
+            <li><a href="#" class="menu1"><span class="glyphicon glyphicon-film" aria-hidden="true"></span>Playlists<span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></a></li>
                 <ul class="cl-effect-2">
-                    <li><a href="movies.html">English</a></li>                                             
-                    <li><a href="movies.html">Chinese</a></li>
-                    <li><a href="movies.html">Hindi</a></li> 
-                </ul> -->
+                   
+                </ul>
                 <!-- script-for-menu -->
                 <script>
-                    // $( "li a.menu1" ).click(function() {
-                    // $( "ul.cl-effect-2" ).slideToggle( 300, function() {
-                    // // Animation complete.
-                    // });
-                    // });
+                    $( "li a.menu1" ).click(function() {
+                        $.get(
+                            '/playlist/getAll/<%= user._id %>',
+                            function(data,status){
+                                if(status=="success"){
+                                    let ndata;
+                                    $('ul.cl-effect-2').html("");
+                                    data.forEach(element => {
+                                        ndata = '<li><a href="/playlist/view/'+ element._id +'">'+ element.playlistName +'</a></li>';
+                                        $('ul.cl-effect-2').append(ndata);
+                                    });
+                                    $( "ul.cl-effect-2" ).slideToggle( 300, function() {
+                                    // Animation complete.
+                                    });
+                                }
+                            }
+                        );
+                    
+                    });
                 </script>
-            <!-- <li><a href="#" class="menu"><span class="glyphicon glyphicon-film glyphicon-king" aria-hidden="true"></span>Sports<span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></a></li>
+            <li><a href="#" class="menu"><span class="glyphicon glyphicon-film glyphicon-king" aria-hidden="true"></span>Subscriptions<span class="glyphicon glyphicon-menu-down" aria-hidden="true"></span></a></li>
                 <ul class="cl-effect-1">
-                    <li><a href="sports.html">Football</a></li>                                             
-                    <li><a href="sports.html">Cricket</a></li>
-                    <li><a href="sports.html">Tennis</a></li> 
-                    <li><a href="sports.html">Shattil</a></li>  
-                </ul> -->
+                   
+                </ul>
                 <!-- script-for-menu -->
                 <script>
-                    // $( "li a.menu" ).click(function() {
-                    // $( "ul.cl-effect-1" ).slideToggle( 300, function() {
-                    // // Animation complete.
-                    // });
-                    //});
+                    $( "li a.menu" ).click(function() {
+                        $.get(
+                            '/subscribe/getAllSubs/<%= user._id %>',
+                            function(data,status){
+                                if(status=="success"){
+                                    let ndata;
+                                    $('ul.cl-effect-1').html("");
+                                    data.forEach(element => {
+                                        ndata = '<li><a href="/channel/id/'+ element.subsTo._id +'">'+ element.subsTo.name +'</a></li>';
+                                        $('ul.cl-effect-1').append(ndata);
+                                    });
+                                    $( "ul.cl-effect-1" ).slideToggle( 300, function() {
+                                    // Animation complete.
+                                    });
+                                }
+                            }
+                        );
+                    });
                 </script>
-            
             </ul>
             <!-- script-for-menu -->
                 <script>
-                    // $( ".top-navigation" ).click(function() {
-                    // $( ".drop-navigation" ).slideToggle( 300, function() {
-                    // // Animation complete.
-                    // });
-                    // });
+                    $( ".top-navigation" ).click(function() {
+                    $( ".drop-navigation" ).slideToggle( 300, function() {
+                    // Animation complete.
+                    });
+                    });
                 </script>
-            <div class="side-bottom">
-                <div class="side-bottom-icons">
-                    <!-- <ul class="nav2">
-                        <li><a href="#" class="facebook"> </a></li>
-                        <li><a href="#" class="facebook twitter"> </a></li>
-                        <li><a href="#" class="facebook chrome"> </a></li>
-                        <li><a href="#" class="facebook dribbble"> </a></li>
-                    </ul> -->
-                </div>
-                
-            </div>
+            
         </div>
 </div>

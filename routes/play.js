@@ -7,6 +7,9 @@ const express = require('express'),
     mongoose = require('mongoose')
 
 router.get('/:id', async (req, res, next) => {
+    if(!req.user){
+         res.redirect('/');;
+    }
     try {
         let video = await dbVideo.findOne({ _id: mongoose.Types.ObjectId(req.params.id) });
         console.log( req.params.id);
