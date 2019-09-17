@@ -3,23 +3,33 @@ const router = express.Router();
 const Modals = require('../dbModels/playlist.js');
 const VideosModal = require("../dbModels/video.js");
 
-// router.get('/', async function (req, res) {
-// 	res.render('playlist1.ejs', { videoId: "myvid",user : req.user });
-// });
+
 
 router.get('/getAll/:userID', async function (req, res) {   // API to get all playlists of a user
-	try {
+	if(req.user){
+		try {
+		
+		let publicAccess = !(req.params.userID==req.user._id);
+		let private = "NOT PRIVATE";
+		if(!publicAccess) private = "Private";
+		//console.log("trying to get playlist as public::"+publicAccess);
 		let playlists = await Modals.playlist.find(
 			{
-				authorId: req.params.userID
+				authorId: req.params.userID,
+				$or : [ { privacy:"Public" } , {privacy: private }] 	
 			}
 		);
 		let obj = playlists;
+		//console.log(obj);
 		res.writeHead(200, { 'Content-Type': 'application/json' });
 		res.write(JSON.stringify(obj));
 		res.end();
-	} catch (err) {
-		if (err) throw err;
+		} catch (err) {
+			if (err) throw err;
+		}
+	}
+	else{
+		res.status(500).send("not logged In");
 	}
 });
 
@@ -85,7 +95,7 @@ router.post('/createNew', async function (req, res) {    // API to add new playl
 		console.log(req.user);
 		let nplay = new Modals.playlist({
 			playlistName: req.body.name,
-			authorId: req.user.email,
+			authorId: req.user._id,
 			videoCount: 1,
 			privacy: req.body.privacy
 		});
@@ -249,6 +259,34 @@ router.post('/orderPlaylist', async function (req, res) {
 	} catch (err) {
 		throw err;
 	}
+});
+
+
+router.get('/view/:playlistId',async function(req,res){
+	let pid = req.params.pid;
+	try {
+		let playlistInfo = await Modals.playlist.findOne({
+			playlistId : pid
+		});
+
+		let songs = await Modals.playlistContent.find(
+			{
+				playlistId: pid
+			}
+		);
+		let songsWithExtraInfo = await VideosModal.dbVideo.populate(songs, { path: 'videoId', model: 'Video' });
+		// console.log(songsWithExtraInfo+"::this is before sorting");
+		songsWithExtraInfo.sort((a, b) => {
+			//console.log(a+"::"+b);
+			if (a.orderNum > b.orderNum) return 1;
+			return -1;
+		});
+		//console.log(songsWithExtraInfo);
+		res.render('viewPlaylist.ejs', {playlistInfo: playlistInfo, videos: songsWithExtraInfo , numArray:[1,2,3,4,5,6,7,8,9], user: req.user});
+	} catch (err) {
+		throw err;
+	}
+
 });
 
 module.exports = router;

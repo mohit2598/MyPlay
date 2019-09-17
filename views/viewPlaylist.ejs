@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <% include partials/head1.ejs %> <!-- This will include and link all the required js and css files -->
+    <link rel="stylesheet" href="/static/css/playlist.css" >
+    <!-- //fonts -->
+</head>
+  <body>
+
+    <% include partials/navbar1.ejs %>
+    <% include partials/sidebar.ejs %>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">  
+        <div class="row playlist-row"> 
+            <div class="col-md-4 playlist-meta-info">
+                <input type="hidden" id="playlistId" value="some pid">
+                <div class="thumbnail">
+                    <img src="/static/images/t2.jpg">
+                </div>
+                <div class="title">
+                   <h1> Playlist Name </h1>
+                </div>
+                <div class="some-info">
+                    2 videos . creator
+                </div>
+                <div class="edit-options">
+                    <button class="btn btn-primary"> Delete Playlist</button>
+                    <button class="btn btn-primary"> Edit Name </button>
+                </div>
+            </div>
+            
+
+                <div class="col-md-8" >
+                        <div class="playlist-sorting-options">
+                                <button type="button" class="btn btn-primary btn-raised" onclick="sortingHandler(this)" data-order="asc" data-type="alphabetical">Alphabetical sorting</button>
+                                <button type="button" class="btn btn-primary btn-raised" onclick="sortingHandler(this)" data-order="asc" data-type="views">Views sorting</button>
+                                <button type="button" class="btn btn-primary btn-raised" onclick="sortingHandler(this)" data-order="asc" data-type="dateuploaded">Date Uploaded sorting</button>
+                                
+                        </div>
+                 <ul class="sortable" id="videoContainer" >
+                    <% numArray.forEach(function(i){ %>
+                        <li>
+                            <%- include('partials/playlistVideoPallete.ejs',{i:i}); %>
+                            <div class="clear-float"></div>
+                        </li>
+                    <% }); %> 
+                 </ul>
+                </div>
+        </div>
+    </div>
+    
+        
+    <% include partials/addToPlaylistModal.ejs %>
+    <span style="display:none;" id="userID" data-id="<%= user._id %>"></span>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/mainscript.js"></script>
+    <script src="/static/js/html5sortable.js"></script>
+    <script>
+            sortable('.sortable',{
+              
+            });
+            
+            sortable('.sortable')[0].addEventListener('sortupdate', function(e) {
+              console.log(e.detail);
+              let pid = document.getElementById('videoContainer').dataset.playlistid;
+              $.post("/playlist/reorder",
+                {
+                  origin : e.detail.origin.index,
+                  destination : e.detail.destination.index,
+                  playlistId : pid
+                },
+                function(data,status){
+                  console.log(data+"::"+status);
+                }
+              );
+          });
+          </script>
+    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+  </body>
+  
+</html>

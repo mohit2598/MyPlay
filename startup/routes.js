@@ -10,11 +10,13 @@ const home = require('../routes/home'),
    video = require('../routes/video'),
    index = require('../routes/index'),
    admin = require('../routes/admin'),
-   playlist = require('../routes/playlist')
+   playlist = require('../routes/playlist'),
+   subscribe = require('../routes/subscribe');
    
 
 
 module.exports = function (app) {
+   app.use('/subscribe',subscribe);
    app.use('/playlist', playlist);
    app.use('/search', search);
    app.use('/video', video);

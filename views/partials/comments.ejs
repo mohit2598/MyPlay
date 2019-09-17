@@ -77,7 +77,7 @@
             <div class="row">
                 <div class="col-sm-10 col-md-10">
                     <div class="like-content" style="border: 1px solid black">
-                        <span> 34 Views </span>
+                        <span> <%= video.views %> Views </span>
                         <span> uploaded on : <%=  moment(video.uploadTime).format( 'MM-DD-YYYY') %></span>
                         <% if(iDisliked) { %>
                         <button class="btn btn-xs btn-secondary dislike like-review" id="dislike">
@@ -85,11 +85,11 @@
                         </button>
                         <script>
                             $("#dislike").css('background', 'red');
-                            $("#dislike").html('<i class="fa fa-thumbs-down" aria-hidden="true"></i> You disliked this')
+                            $("#dislike").html('<%= dislikes %><i class="fa fa-thumbs-down" aria-hidden="true"></i> You disliked this')
                         </script>
                         <% } else {%>
                         <button class="btn btn-xs btn-secondary dislike like-review" id="dislike">
-                            <i class="fa fa-thumbs-down" aria-hidden="true"></i> Dislike
+                            <i class="fa fa-thumbs-down" aria-hidden="true"></i><%= dislikes %> Dislike
                         </button>
                         <% } %>
                         <% if(iLiked) { %>
@@ -98,11 +98,11 @@
                         </button>
                         <script>
                             $("#like").css('background', 'green');
-                            $("#like").html('<i class="fa fa-thumbs-up" aria-hidden="true"></i> You liked this')
+                            $("#like").html('<%= likes %><i class="fa fa-thumbs-up" aria-hidden="true"></i> You liked this')
                         </script>
                         <% } else { %>
                         <button class="btn btn-xs btn-secondary like like-review" id="like">
-                            <i class="fa fa-thumbs-up " aria-hidden="true"></i> Like
+                            <%= likes %><i class="fa fa-thumbs-up " aria-hidden="true"></i> Like
                         </button>
                         <% }%>
                         <span style="float: right"> three dots</span>
@@ -169,6 +169,7 @@
                                 <% } %>
                             </li>
                             <% }) %>
+                            <p id="dummy"></p>
                         </ul>
                     </div>
                     <div class="tab-pane" id="add-comment">

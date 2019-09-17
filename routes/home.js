@@ -5,12 +5,12 @@ const express = require('express'),
 router.get('/',async (req,res,next) =>{
     
     try{       
-        res.render('home1.ejs',{user : null})
-        // if(req.user){
-        //     res.render('index.ejs',{user  : req.user});
-        // }else{
-        //     res.render('home.ejs',{user : null})
-        // }
+        //res.render('index.ejs',{user : null})
+        if(req.user){
+            res.render('index.ejs',{user  : req.user});
+        }else{
+            res.render('home1.ejs',{user : null})
+        }
        // res.render('play.ejs',{user : null,videos : null})
         //res.send(");
         //res.send(req.user);

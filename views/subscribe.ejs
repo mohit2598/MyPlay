@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	
+	<!-- This will include and link all the required js and css files -->
+	<link href="/static/css/subscribe.css" rel="stylesheet" type="text/css">
+	<% include partials/head1.ejs %>
+</head>
+
+<body>
+
+		<% include partials/navbar1.ejs %>
+		<% include partials/sidebar.ejs %>
+	<!-- <button type="button" class="btn btn-primary" ></button> -->
+	<input type="hidden" id="subscribeMe" value="<%= user._id %>">
+	<div class="subscribe-container"><a class="subscribe-button" data-count="241">
+		<svg xmlns="http://www.w3.org/2000/svg">
+		  <g>
+			<rect class="plus__line1" width="2" height="12" x="5" y="0"></rect>
+			<rect class="plus__line2" width="12" height="2" x="0" y="5"></rect>
+		  </g>
+	</svg><span class="subscribe-text">Subscribe</span></a></div>
+	<% include partials/footer.ejs %>
+	<script>
+		var subButton = document.querySelector('.subscribe-button');
+		var subbedClass = 'subbed';
+
+		subButton.addEventListener('click', function(e) {
+			toggleSubbed();
+			e.preventDefault();
+
+		});
+
+		function addSubsAjax(){
+			let subsTo = $('#subscribeMe').val();
+			$.post("/subscribe/hsr/"+subsTo ,
+				{
+					action : "add"
+				},
+				function(data,status){
+					console.log(data+"::"+status);
+				}
+			);
+		}
+
+		function deleteSubsAjax(){
+			let subsTo = $('#subscribeMe').val();
+			$.post("subscribe/hsr/"+subsTo ,
+				{
+					action : "delete"
+				},
+				function(data,status){
+					console.log(data+"::"+status);
+				}
+			);
+		}
+
+		function toggleSubbed() {
+			var text;
+			var count = subButton.dataset.count;
+			//console.log(count)
+				
+			if (subButton.classList.contains(subbedClass)) {
+				subButton.classList.remove(subbedClass);
+				text = 'Subscribe';
+				count--;
+				deleteSubsAjax();
+			} else {
+				subButton.classList.add(subbedClass);
+				text = 'Subscribed';
+				count++;
+				addSubsAjax();
+			}
+			
+			subButton.querySelector('.subscribe-text').innerHTML = text;
+			subButton.dataset.count = count;
+		}
+
+		if ('alert' == '') {
+			window.setInterval(toggleSubbed, 1000);
+		}
+	</script>
+</body>
+</html>

@@ -15,6 +15,7 @@ const { dbUser } = require('../dbModels/user');
 const { dbLike } = require('../dbModels/like');
 const { dbDislike } = require('../dbModels/dislike');
 const { dbView } = require('../dbModels/view');
+const { createNotif } = require('../controllers/subscription');
 
 router.post('/likeVideo', Video.likeVideo);
 router.post('/dislikeVideo', Video.dislikeVideo);
@@ -50,21 +51,24 @@ router.post('/getVideoDescription', async (req, res) => {
 			let iLiked = await dbLike.findOne({ videoId: _id, userEmail: req.user.email });
 			let iDisliked = await dbDislike.findOne({ videoId: _id, userEmail: req.user.email });
 			let comments = await dbComment.find({ videoId: _id });
+			let likes = await dbLike.find({videoId : _id}).count();
+			let dislikes = await dbDislike.find({videoId : _id}).count();
 			console.log('This is comments ' + comments);
 			console.log("iLiked " + iLiked);
 			console.log('iDislikde ' + iDisliked);
 			let dbview = new dbView({
 				userEmail: req.user.email,
-				videoId: _id
+				videoId: _id,
 			});
-			let view = await dbView.findOne({ userEmail: req.user.emai, videoId: _id });
+			let view = await dbView.findOne({ userEmail: req.user.email, videoId: _id });
 			if (!view) {
 				let result = await dbview.save();
 				let temp = await dbVideo.findByIdAndUpdate({ _id: _id }, { $inc: { views: 1 } });
 			}
 			res.render('partials/comments.ejs', {
 				video: video, iLiked: iLiked, iDisliked: iDisliked,
-				uploader: uploader, comments: comments, moment: moment, userEmail: req.user.email
+				uploader: uploader, comments: comments, moment: moment, userEmail: req.user.email,
+				likes : likes,dislikes : dislikes
 			});
 
 		} catch (ex) {
@@ -168,11 +172,12 @@ router.post('/upload', async (req, res) => {
 					dbVideo.findOne({ hash: hash }, (err, oldvideo) => {
 						if (!oldvideo) {
 							dbvideo = new dbVideo(params);
-							dbvideo.save((err, savedVideo) => {
+							dbvideo.save(async (err, savedVideo) => {
 								if (err) {
 									console.log('error occured' + err);
 									res.send({ code: -1, message: "Internal Server error" });
 								} else {
+									await createNotif(req.user, savedVideo);
 									res.send({ code: 1 });
 									res.end();
 									console.log('Success ' + savedVideo);
@@ -198,12 +203,13 @@ router.post('/upload', async (req, res) => {
 									} else {
 										params.id = oldvideo.id;
 										dbvideo = new dbVideo(params);
-										dbvideo.save((err, savedVideo) => {
+										dbvideo.save(async (err, savedVideo) => {
 											if (err) {
 												console.log('error occured' + err);
 												res.writeHead(409, { Connection: 'close' });
 												res.send({ code: -1, message: "Internal Server error" });
 											} else {
+												await createNotif(req.user, savedVideo);
 												res.writeHead(303, { Connection: 'close' });
 												res.send({ code: 1 });
 												console.log('Success ' + savedVideo);

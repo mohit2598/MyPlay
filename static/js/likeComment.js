@@ -1,28 +1,28 @@
 //here retrieve the videoId and stringify this is for liking the video
 
-changeLikeButtons = function (a, b) {
+changeLikeButtons = function (likes,dislikes,a, b) {
     if (a == 1) {
         $("#like").css('background', 'green');
-        $("#like").html('<i class="fa fa-thumbs-up" aria-hidden="true"></i> You liked this')
+        $("#like").html(likes + '<i class="fa fa-thumbs-up" aria-hidden="true"></i> You liked this')
     }
-    if(a == 0){
+    if (a == 0) {
         $("#like").css('background', '#111');
-        $("#like").html('Like')
+        $("#like").html(likes + ' Like')
     }
 
-    if(b == 1) {
+    if (b == 1) {
         $("#dislike").css('background', 'red');
-        $("#dislike").html('<i class="fa fa-thumbs-down" aria-hidden="true"></i> You disliked this')
+        $("#dislike").html(dislikes  +' <i class="fa fa-thumbs-down" aria-hidden="true"></i> You disliked this')
     }
-    if(b == 0){
+    if (b == 0) {
         $("#dislike").css('background', '#111');
-        $("#dislike").html('Dislike')
+        $("#dislike").html(dislikes + ' Dislike')
     }
 }
 
 $("#like").click(function () {
 
-    
+
     var videoid = window.currentPlayVideoId;
     console.log(window.currentPlayVideoId);
     $.post("/video/likeVideo",
@@ -31,12 +31,12 @@ $("#like").click(function () {
             _id: videoid,
         },
         function (data, status) {
-            if (data == 1)
-                changeLikeButtons(1,0);
-            else if (data == -1)
-                changeLikeButtons(0,0);
+            if (data.code == 1)
+                changeLikeButtons(data.likes, data.dislikes, 1, 0);
+            else if (data.code == -1)
+                changeLikeButtons(data.likes, data.dislikes, 0, 0);
             else
-                changeLikeButtons(1,0);
+                changeLikeButtons(data.likes, data, dislikes, 1, 0);
             console.log(status);
         });
 });
@@ -50,12 +50,12 @@ $("#dislike").click(function () {
             _id: videoid,
         },
         function (data, status) {
-            if (data == 1)
-                changeLikeButtons(0,1);
-            else if (data == -1)
-                changeLikeButtons(0,0);
+            if (data.code == 1)
+                changeLikeButtons(data.likes, data.dislikes, 0, 1);
+            else if (data.code == -1)
+                changeLikeButtons(data.likes, data.dislikes, 0, 0);
             else
-                changeLikeButtons(0,1);               
+                cchangeLikeButtons(data.likes, data.dislikes, 0, 1);
         });
 });
 
@@ -73,6 +73,8 @@ $("#add_comment").click(function () {
         function (data, status) {
             if (data == 1) {
                 alert("you added a comment on video");
+                content: document.getElementById("comment_video").value;
+                $("#dummy").before('<li class="media" style="position: relative"> <a class="pull-left" > <img class="media-object img-circle" src="/static/images/user.png" alt="profile" </a> <div class="media-body"> <div class="well well-lg"> <h4 class="media-heading text-uppercase reviews"> </h4> <ul class="media-date text-uppercase reviews list-inline"></ul><p class="media-comment" id="" data-_id=""> ' +  content + '</p></div></div></li>')
                 document.getElementById("comment_video").value = '';
             }
             else if (data == -1)
