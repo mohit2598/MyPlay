@@ -1,12 +1,16 @@
 $("#searchClick").click(() =>{
-    var query = $("#search").val();
+    let query = $("#search").val();
     if(query){
         console.log(query);
-        //$(location).attr('href', "/search/query/" + query)
-        // $.get({url: "/search/query/" + query, success: function(result){
-        //     console.log(result);
-        // }});
         window.location.href = "/search/query?query=" + query;
     }
     
+});
+
+$('form.autocomplete').submit(function(){
+    let query = $("#search").val();
+    if(query){
+        console.log(query);
+        window.location.href = "/search/query?query=" + query;
+    }
 });

@@ -77,7 +77,7 @@ router.post('/emailVerification', async (req, res, next) => {
             const token = temp.getToken();
             var transporter = nodemailer.createTransport({
                 host: 'smtp.gmail.com',
-                port: '25',
+                port: '587',
                 auth: {
                     user: 'hunteronline4477@gmail.com',
                     pass: 'rety34@47q'

@@ -125,6 +125,7 @@ router.post('/upload', async (req, res) => {
 				fstream = fs.createWriteStream(path.join(uploadPath, thumbnailName + '.png'));
 			} else{
 				file.resume();
+				return;
 			}
 			file.pipe(fstream);																// pipes the output of file listener to fstream
 			file.on('end', function () {														// on ending the listening
@@ -154,8 +155,11 @@ router.post('/upload', async (req, res) => {
 				if (videoOk == 1) {
 					fs.unlink('./assets/' + fileName + '.mp4');
 				}
-				res.status(400).send({ code: -1, message: "Invalid file format" });
+				res.writeHead(200, {'Content-Type': 'application/json' });
+				res.write(JSON.stringify({ code: -1, message: "Invalid file format" }));
 				res.end();
+				//res.end({ code: -1, message: "Invalid file format" });
+				//res.end();
 			} else {
 				params.hash = hash;
 				params.uploaderName = req.user.name;
@@ -165,8 +169,10 @@ router.post('/upload', async (req, res) => {
 					console.log(result);
 					fs.unlink('./assets/' + thumbnailName + '.png');
 					fs.unlink('./assets/' + fileName + '.mp4');
-					res.status(400).send({ code: -1, message: result.error });
+					res.writeHead(200, {'Content-Type': 'application/json' });
+					res.write(JSON.stringify({ code: -1, message: result.error }));
 					res.end();
+					//res.end();
 				} else {
 					console.log('success');
 					dbVideo.findOne({ hash: hash }, (err, oldvideo) => {
@@ -179,16 +185,17 @@ router.post('/upload', async (req, res) => {
 								} else {
 									await createNotif(req.user, savedVideo);
 									res.send({ code: 1 });
-									res.end();
+									//res.end();
 									console.log('Success ' + savedVideo);
 								}
-							})
+							});
 						} else if (oldvideo) {
 							fs.unlink('./assets/' + fileName + '.mp4', (err) => {
 								if (err) {
 									console.log("in finish db useer " + err);
-									res.writeHead(409, { Connection: 'close' });
-									res.send({ code: -1, message: "Internal Server error" });
+									res.writeHead(200, {'Content-Type': 'application/json' });
+									res.write(JSON.stringify({ code: -1, message: "Internal Server error" }));
+									res.end();
 								} else {
 									console.log('successfully deleted ' + fileName + '.mp4');
 									console.log("oldvideo uploader " + oldvideo.uploader);
@@ -196,8 +203,11 @@ router.post('/upload', async (req, res) => {
 									if (oldvideo.uploader == params.uploader) {
 										console.log('successfully deleted thumbnail ' + thumbnailName + '.png');
 										fs.unlink('./assets/' + thumbnailName + '.png', (err) => {
-											res.writeHead(303, { Connection: 'close' });
-											res.send({ code: -1, message: 'You have already uploaded this video' });
+											console.log("starting write");
+											res.writeHead(200, { 'Content-Type': 'application/json'});
+											res.write(JSON.stringify({ code: -1, message: 'You have already uploaded this video' }));
+											res.end();
+											console.log('write end');
 										})
 
 									} else {
@@ -206,12 +216,14 @@ router.post('/upload', async (req, res) => {
 										dbvideo.save(async (err, savedVideo) => {
 											if (err) {
 												console.log('error occured' + err);
-												res.writeHead(409, { Connection: 'close' });
-												res.send({ code: -1, message: "Internal Server error" });
+												res.writeHead(200, { 'Content-Type': 'application/json'});
+												res.write(JSON.stringify({ code: -1, message: "Internal Server error" }));
+												res.end();
 											} else {
 												await createNotif(req.user, savedVideo);
-												res.writeHead(303, { Connection: 'close' });
-												res.send({ code: 1 });
+												res.writeHead(200, { 'Content-Type': 'application/json'});
+												res.write(JSON.stringify({ code: 1 }));
+												res.end();
 												console.log('Success ' + savedVideo);
 											}
 										})

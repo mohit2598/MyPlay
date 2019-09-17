@@ -9,8 +9,11 @@ function uploadFile() {
     var description = _("description").value;
     var tags = [];
     var genre = _('genre').value;
-    var isPrivate  = $("input[name=isPrivate]:checked").value || false;
-
+    var isPrivate = false;
+    let temp  = false || parseInt($("input[name=isPrivate]:checked").val(),10);
+    if(temp==1) isPrivate=true;
+    console.log(isPrivate);
+    console.log(typeof(isPrivate));
     $("span.tag").each(function(){
          tags.push($(this).text());
     });
@@ -33,6 +36,13 @@ function uploadFile() {
     ajax.addEventListener("load", completeHandler, false);
     ajax.addEventListener("error", errorHandler, false);
     ajax.addEventListener("abort", abortHandler, false);
+    ajax.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            alert(this.responseText);
+        //   document.getElementById("").innerHTML =
+        //   this.responseText;
+        }
+      };
     ajax.open("POST", "/video/upload");
     ajax.send(formdata);
 }

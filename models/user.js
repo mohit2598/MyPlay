@@ -25,7 +25,7 @@ User.prototype.signup = async function (newUser) {
             let tmpuser = await dbTmpUser.findOne({ token: this.token });
             if (!tmpuser) {
                 return { code: -1, err: 'Invalid token' };
-            } else if (tmpuser.expiry > Date.now()) {
+            } else if (tmpuser.expiry < Date.now()) {
                 return { code: -1, err: 'Token Expired try again' };
             } else {
                 let result = await dbTmpUser.findOneAndRemove({ token: this.token });

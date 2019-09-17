@@ -31,16 +31,16 @@ function validateEmail(email) {
     return re.test(email);
 }
 
-router.get('/signup/verify/:token',async (req,res)=>{
+router.get('/signup/verify/:token', async (req, res) => {
     token = req.params.token;
-    try{
-        let tmpuser = await dbTmpUser.findOne({token : token});
-        if(!tmpuser){
-             res.status(400).redirect('/');
-        }else{
-            res.render('signup.ejs',{token : token,email : tmpuser.email});
+    try {
+        let tmpuser = await dbTmpUser.findOne({ token: token });
+        if (!tmpuser) {
+            res.status(400).redirect('/');
+        } else {
+            res.render('signup.ejs', { token: token, email: tmpuser.email });
         }
-    }catch(ex){
+    } catch (ex) {
         console.log("Exception in email verifiaction " + ex);
     }
 })
@@ -50,13 +50,13 @@ router.post('/signup/checkEmailAvl', async (req, res) => {
     let verify1 = validateEmail(email);
     let verify2;
     try {
-        verify2 = await tmpValidate({email : email});
+        verify2 = await tmpValidate({ email: email });
     } catch (ex) {
         res.send(ex.details[0].message);
         console.log('Eror in validation ' + ex)
     }
 
-    if (!verify1 ) {
+    if (!verify1) {
         res.send('-1');
     } else {
         try {
@@ -65,9 +65,9 @@ router.post('/signup/checkEmailAvl', async (req, res) => {
             if (!dbuser) {
                 let token = crypto.randomBytes(20).toString('hex');
                 let params = {
-                    email : email
+                    email: email
                 }
-                update = { email : email,token: token ,expiry : Date.now() + 60*60*1000};
+                update = { email: email, token: token, expiry: Date.now() + 60 * 60 * 1000 };
                 options = { upsert: true, new: true, setDefaultsOnInsert: true };
 
 
@@ -78,7 +78,7 @@ router.post('/signup/checkEmailAvl', async (req, res) => {
                     } else {
                         var transporter = nodemailer.createTransport({
                             host: 'smtp.gmail.com',
-                            port: '25',
+                            port: '587',
                             auth: {
                                 user: 'hunteronline4477@gmail.com',
                                 pass: 'rety34@47q'
@@ -88,6 +88,20 @@ router.post('/signup/checkEmailAvl', async (req, res) => {
                                 ciphers: 'SSLv3'
                             }
                         });
+
+                        // var transporter = nodemailer.createTransport({
+                        //     host: "smtp-mail.outlook.com", // hostname
+                        //     secureConnection: false, // TLS requires secureConnection to be false
+                        //     port: 587, // port for secure SMTP
+                        //     tls: {
+                        //         ciphers: 'SSLv3'
+                        //     },
+                        //     requireTLS: true,//this parameter solved problem for me
+                        //     auth: {
+                        //         user: 'hotspotOnMNNIT@outlook.com',
+                        //         pass: 'Rajjo@Paani'
+                        //     }
+                        // });
 
                         var mailOptions = {
                             to: email,
