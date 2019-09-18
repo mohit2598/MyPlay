@@ -1,39 +1,55 @@
 <div class="modal fade" id="playlistModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-			aria-hidden="true">
-			<div class="modal-dialog" role="document">
-				<div class="modal-content">
-					<div class="modal-header" style="padding: 19px;">
-						<h3 class="modal-title" id="exampleModalLabel">Add to playlist</h3>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true" style="position: absolute; top: .5em; right: 1em; font-size: 1.5em;">&times;</span>
-						</button>
-					</div>
-					<div class="modal-body" style="padding: 21px;">
-						<div id="playlistSectionInModal" style="font-size:large;">
+	aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header" style="padding: 19px;">
+				<h3 class="modal-title" id="exampleModalLabel">Add to playlist</h3>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true"
+						style="position: absolute; top: .5em; right: 1em; font-size: 1.5em;">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body" style="padding: 21px;">
+				<div id="playlistSectionInModal" style="font-size:large;">
+				</div>
+				<button id="createPlaylistButton" type="button" class="btn btn-primary"
+					onclick="showCreateOption(this)">
+					Create new playlist </button>
+				<div id="createPlaylistDialog" style="display:none;">
+					<form name="createPlaylistForm" onsubmit="return false;">
+						<div class="form-group">
+							<label for="name">Name</label>
+							<input name="name" type="text" class="form-control" placeholder="Enter Playlist Name...">
 						</div>
-						<button id="createPlaylistButton" type="button" class="btn btn-primary"
-							onclick="showCreateOption(this)">
-							Create new playlist </button>
-						<div id="createPlaylistDialog" style="display:none;"> 
-							<form name="createPlaylistForm" onsubmit="return false;">
-								<div class="form-group">
-									<label for="name">Name</label>
-									<input name="name" type="text" class="form-control"
-										placeholder="Enter Playlist Name...">
-								</div>
-								<div class="form-group">
-									<label for="privacy" >Privacy</label>
-									<select name="privacy" class="form-control">
-										<option value="Public" name="privacy">Public</option>
-										<option value="Private" name="privacy">Private</option>
-									</select>
-								</div>
-								<input type="hidden" value="" name="videoId">
-								<input type="submit" class="btn btn-primary " value="Create"
-									onclick="createPlaylistFun()">
-							</form>
+						<div class="form-group">
+							<label for="privacy">Privacy</label>
+							<select name="privacy" class="form-control">
+								<option value="Public" name="privacy">Public</option>
+								<option value="Private" name="privacy">Private</option>
+							</select>
 						</div>
-					</div>
+						<input type="hidden" value="change in addToPlaylistModal if there is some problem" name="videoId">
+						<input type="submit" class="btn btn-primary " value="Create" onclick="createPlaylistFun()">
+					</form>
 				</div>
 			</div>
-			</div>
+		</div>
+	</div>
+</div>
+<div class="toast-container">
+	<div class="addedToPlaylist">
+		<div class="toast">
+			<p> Video Added To Playlist </p>
+		</div>
+	</div>
+	<div class="removedFromPlaylist">
+		<div class="toast">
+			<p> Video Removed From Playlist </p>
+		</div>
+	</div>
+	<div class="createdPlaylist">
+		<div class="toast">
+			<p> New Playlist Created </p>
+		</div>
+	</div>
+</div>

@@ -9,9 +9,9 @@ router.get('/',function(req,res){
    // let temp = showAllSubs(req.user);
    // temp.then(function(obj){
         //console.log("this is the return value::"+ obj);
-        console.log("reached");
-        for(let i=0;i<10;i++) createNotif();
-        res.render('subscribe.ejs', {user : req.user, subscription : {subsTo : {name: "temp"}}, playlist: {hello:"hello"}});
+        // console.log("reached");
+        // for(let i=0;i<10;i++) createNotif();
+         res.render('subscribe.ejs', {user : req.user, subscription : {subsTo : {name: "temp"}}, playlist: {hello:"hello"}});
   //  });    
 });
 
@@ -22,10 +22,41 @@ router.post('/getNotifs',async function(req,res){
     else{
         let notifs = await notification.find({
            toUserId : req.user._id
-        });
+        }).sort('notifTime').limit(10);
         res.writeHead(200,{'Content-Type':'application/json'});
         res.write(JSON.stringify(notifs));
         res.end();
+    }
+});
+
+router.post('/markRead',async function(req,res){
+    if(req.user){
+        if(req.body){
+            let howMany = req.body.howMany ;
+            if(howMany=="one"){
+                let nid = req.body.notifId;
+                let notif = await notification.findById(nid);
+                notif.isRead = true;
+                await notif.save();
+                res.send("done");
+            }
+            else{
+                let notif = await notification.find({
+                    toUserId : req.user._id
+                });
+                notif.forEach(async (item)=>{
+                    item.isRead = true;
+                    await item.save();
+                });
+                res.send("done");
+            }
+        }
+        else{
+            req.send("no req body");
+        }
+    }
+    else{
+        req.send("Not signed in.");
     }
 });
 

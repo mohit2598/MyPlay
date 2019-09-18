@@ -12,7 +12,7 @@
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">  
         <div class="row playlist-row"> 
             <div class="col-md-4 playlist-meta-info">
-                <input type="hidden" id="playlistId" value="some pid">
+                <input type="hidden" id="playlistId" value="<%= playlistInfo._id %>">
                 <div class="thumbnail">
                     <img src="/static/images/t2.jpg">
                 </div>
@@ -36,10 +36,11 @@
                                 <button type="button" class="btn btn-primary btn-raised" onclick="sortingHandler(this)" data-order="asc" data-type="dateuploaded">Date Uploaded sorting</button>
                                 
                         </div>
-                 <ul class="sortable" id="videoContainer" >
+                 <ul class="sortable" id="videoContainer" data-playlistid="<%= playlistInfo._id %>">
                     <% videos.forEach(function(item){ %>
-                        <li>
-                            <%- include('partials/playlistVideoPallete.ejs',{item:item , playlistInfo:playlistInfo}); %>
+                      <li data-name="<%= item.videoId.title %>" data-dateuploaded="<%= item.videoId.uploadTime %>"
+                        data-views="<%= item.videoId.views %>">
+                          <%- include('partials/playlistVideoPallete.ejs',{item:item , playlistInfo:playlistInfo}); %>
                             <div class="clear-float"></div>
                         </li>
                     <% }); %> 
@@ -59,7 +60,9 @@
     <script src="/static/js/html5sortable.js"></script>
     <script>
             sortable('.sortable',{
-              
+              forcePlaceholderSize: true ,
+              placeholderClass: 'placeholder-class-for-playlist',
+              hoverClass: 'hover-class-for-playlist'
             });
             
             sortable('.sortable')[0].addEventListener('sortupdate', function(e) {

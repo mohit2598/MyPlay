@@ -14,6 +14,26 @@ function showStuff(element)  {  // this is for tab switching in login and sign u
   element.classList.add('border-top-red-5');
 }
 
+
+function showMsgAddedToPlaylist() {
+  $('div.addedToPlaylist').show(100);
+  setTimeout(() => {
+    $('div.addedToPlaylist').hide(100);
+  }, 4000);
+}
+function showMsgRemovedFromPlaylist() {
+  $('div.removedFromPlaylist').show(100);
+  setTimeout(() => {
+    $('div.removedFromPlaylist').hide(100);
+  }, 4000);
+}
+function showMsgCreatedPlaylist() {
+  $('div.createdPlaylist').show(100);
+  setTimeout(() => {
+    $('div.createdPlaylist').hide(100);
+  }, 4000);
+}
+
 var videoSelected;                // this is for grabbing a particular video for operations in the backend. A user will process only one video at a time hence only one variable required
 
 function showCreateOption(ele){   // for showing the create new playlist form in Add to playlist modal
@@ -32,9 +52,14 @@ function addSongToPlaylist(pid){      // for adding a video(videoSelected) to a 
               playlistId : pid
             },
             function(data,status){
-              console.log(data);
-              console.log(status);
-              $('#video-added-msg').toast({delay: 2000}).toast("click");
+              if (status == "success") {
+                console.log(data);
+                console.log(status);
+                showMsgAddedToPlaylist();
+              }
+              else {
+                console.log("some error has occured." + data);
+              }
             });
 }
 
@@ -44,10 +69,15 @@ function removeSongFromPlaylist(pid){        // for removing a video(videoSelect
               videoId : videoSelected ,
               playlistId : pid
             },
-            function(data,status){
+            function (data, status) {
+              if(status=="success"){
               console.log(data);
               console.log(status);
-              $('#video-removed-msg').toast({delay: 2000}).toast("click");
+              showMsgRemovedFromPlaylist();
+              }
+              else{
+                console.log("some error has occured." + data);
+              }
             });
 }
 
@@ -77,15 +107,16 @@ function createPlaylistFun(){     // this creates new playlist
       videoId : myform['videoId'].value
     },
     function(data,status){
-      console.log(data+":::::"+status);
-      if(status=="success"){
-
-        myform['name'].value="";
-       
+      if (status == "success") {
+        myform['name'].value = "";
+        showMsgCreatedPlaylist();
         $('#playlistModal').modal('toggle');
         $('#createPlaylistDialog').hide();
         $('#createPlaylistButton').show();
-        
+
+      }
+      else{
+        console.log("some error has occured." + data);
       }
     }
   )
@@ -181,3 +212,22 @@ function sortingHandler(element){   // handles sorting of playlist on frontend a
 
 }
 
+
+function reportAbuse(ele){
+  console.log("report initiated");
+  let videoId = ele.dataset.videoid ;
+  $.post("/video/reportAbuse",
+  {
+      videoId : videoId,
+  },
+  function(data,status){
+      if(data==1)
+      {
+          alert("you reported abuse on this video");
+      }
+      else if(data==-1)
+      {
+          alert("you cannot report abuse");
+      }
+  });
+}

@@ -111,6 +111,7 @@
                 </div>
 
             </div>
+            <button data-id="<%= video._id %>" onclick="reportAbuse(this)">dabao mujhe</button>
             <div class="uploded by">
                 <span> uploaded By : <a href="/user/id/<%= video.uploader %>"> <%= video.uploaderName %> </a></span>
 
@@ -220,7 +221,7 @@
 
     </div>
 </div>
-
+<script src="/static/js/mainscript.js"></script>
 <script src="/static/js/likeComment.js"></script>
 <script>
     $("a.editCommentLink").click(function () {

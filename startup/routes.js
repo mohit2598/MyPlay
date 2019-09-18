@@ -11,9 +11,9 @@ const home = require('../routes/home'),
    index = require('../routes/index'),
    admin = require('../routes/admin'),
    playlist = require('../routes/playlist'),
-   subscribe = require('../routes/subscribe');
+   subscribe = require('../routes/subscribe'),
+   adminPanel = require('../routes/adminPanel');
    
-
 
 module.exports = function (app) {
    app.use('/subscribe',subscribe);
@@ -26,6 +26,7 @@ module.exports = function (app) {
    app.use('/settings', settings);
    app.use('/forgot', forgot);
    app.use('/index', index);
+   app.use('/adminPanel',adminPanel);
    app.use('/admin', admin);
    app.use('/', home);
 

@@ -1,6 +1,5 @@
 const express = require('express'),
     router = express.Router(),
-    Admin = require('../controllers/admin'),
     {AdminRequest,validate} = require('../dbModels/adminRequest')              
 
 router.get('/getrequest/:id',async (req,res,next)=>{

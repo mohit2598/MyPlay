@@ -1,7 +1,5 @@
 const express = require('express'),
     router = express.Router(),
-    Admin = require('../controllers/admin'),
-    { AdminRequest, validate } = require('../dbModels/adminRequest'),
     { dbVideo } = require('../dbModels/video'),
     getSearchResults = require('../static/js/getSearchResults'),
     mongoose = require('mongoose')

@@ -3,7 +3,33 @@ const { dbLike } = require('../dbModels/like'),
     { dbDislike } = require('../dbModels/dislike'),
     { dbComment } = require('../dbModels/comment'),
     { dbVideo, validate } = require('../dbModels/video'),
+    { dbReports } = require('../dbModels/reports'),
     mongoose = require('mongoose')
+
+
+//this is to report abuse 
+var reportAbuse = async function (req, res, next) {
+
+    try{
+        let dbreports = new dbReports({
+            reporter : req.user.email,
+            videoId : req.body.videoId,
+        });
+        
+        let result = await dbreports.save();
+    
+        if (result)
+            res.send("1")
+        else
+            res.send("-1");
+    }catch(ex){
+        console.log(ex);
+        res.status(500).send('Internal Server error');
+    }
+
+    next();
+}
+
 
 //this is to remove the comment
 //this is for adding comment on video
@@ -334,5 +360,6 @@ module.exports = {
     addComment: addComment,
     likeVideo: likeVideo,
     dislikeVideo: dislikeVideo,
-    getComment: getComment
+    getComment: getComment,
+    reportAbuse : reportAbuse
 };
