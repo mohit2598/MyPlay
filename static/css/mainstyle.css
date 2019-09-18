@@ -4,6 +4,32 @@ body{
 
 }
 
+
+.toast-container {
+  position: fixed;
+  bottom: 2em;
+  left: 45%;
+  z-index :2000;
+}
+
+.toast-container>div {
+  display: none;
+}
+
+.toast {
+  background: black;
+  color: white;
+  padding: 1em;
+  border-radius: 12px;
+  margin: 6px;
+}
+
+.toast>p {
+  font-size: 16px;
+  font-weight: 600;
+
+}
+
 .checkbox{
   padding:9px;
   margin:0;
@@ -57,6 +83,11 @@ body{
 
 .playlistCheckbox {
   font-size: x-large;
+}
+
+div.video-thumbnail>a>img {
+  /* width: 220px; */
+  height: 147px;
 }
 
 /* #videoContainer {

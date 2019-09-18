@@ -16,6 +16,8 @@ const { dbLike } = require('../dbModels/like');
 const { dbDislike } = require('../dbModels/dislike');
 const { dbView } = require('../dbModels/view');
 const { createNotif } = require('../controllers/subscription');
+const { dbReports } = require('../dbModels/reports');
+
 
 router.post('/likeVideo', Video.likeVideo);
 router.post('/dislikeVideo', Video.dislikeVideo);
@@ -26,6 +28,96 @@ router.post('/saveComment', Video.saveComment);
 router.post('/editVideo', Video.editVideo);
 router.post('/saveVideo', Video.saveVideo);
 router.post('/getComment', Video.getComment);
+router.post('/reportAbuse', Video.reportAbuse);
+
+router.get('/removeVideo/:id', async (req, res) => {
+
+	if (!req.user || !req.user.isAdmin) {
+		res.status('401').send(req.user + " "  + req.user.email + " " + req.user.isAdmin);
+	} else {
+		try {
+			var _id = req.params.id;
+			var videoId, uploader;
+			let report = await dbReports.findById(_id);
+			if (!report) {
+				console.log("no such report abuse");
+			} else {
+				videoId = report.videoId;
+
+				let dbvideo = await dbVideo.find({ _id: videoId });
+
+				dbVideo.findOneAndDelete({ _id: videoId }, async (err, deletedVideo) => {
+					if (err) {
+						res.status(500).send('Internal Server Error');
+					} else {
+						fs.unlink('./assets/' + deletedVideo.thumbnailName + '.png');
+						let noOfVideo = await dbVideo.find({ hash: deletedVideo.hash }).count();
+						if (noOfVideo == 0) {
+							fs.unlink('./assets/' + deletedVideo.id + '.mp4');
+						}
+						//res.send({code : 1,message : 'successfully deletede record'});
+					}
+				});
+			}
+			var validrequest;
+
+			validrequest = await dbReports.find();
+			let fullReport = await dbVideo.populate(validrequest, { path: 'videoId', model: 'Video' });
+			console.log(validrequest);
+			res.render("adminPanel.ejs", { requests: fullReport, moment: moment });
+
+		} catch (err) {
+			console.log(err);
+			res.send(err);
+		}
+	}
+
+
+
+})
+
+
+//when admin feel it's okkk
+router.get('/noIssue/:id', async (req, res) => {
+
+	if (!req.user) {
+		res.status('401').send("Not autherised to do this");
+	}
+	else {
+		try {
+			var _id = req.params.id;
+			var videoId, uploader;
+			let report = await dbReports.findById(_id);
+			if (!report) {
+				console.log("no such report abuse");
+
+			}
+			else {
+				videoId = report.videoId;
+				uploader = report.uploader;
+
+
+				let deleted = await dbReports.deleteMany({ videoId: videoId });
+
+
+
+			}
+
+		} catch (err) {
+			console.log(err);
+			res.send(err);
+		}
+	}
+
+	var validrequest;
+	try {
+		validrequest = await dbReports.find();
+	} catch (exep) {
+		console.log(exep);
+	}
+	console.log(validrequest);
+	res.render("admin_panel.ejs", { validrequest: validrequest, moment: moment });
+})
 
 router.get('/upload1', (req, res) => {
 	if (req.user) {
@@ -273,7 +365,7 @@ router.post('/import/:id', async (req, res) => {
 		if (!dbvideo) {
 			return res.send({ code: -1, message: 'This video is not available' })
 		}
-		let dbvideo2 = await dbVideo.findOne({hash : dbvideo.hash,uploader : req.user.email});
+		let dbvideo2 = await dbVideo.findOne({ hash: dbvideo.hash, uploader: req.user.email });
 		if (dbvideo2) {
 			return res.send({ code: -1, message: 'This video is already in your account' });
 		}
@@ -340,13 +432,13 @@ router.post('/import/:id', async (req, res) => {
 				res.end();
 			} else {
 				let result = validate(params);
-				if(result.error){
+				if (result.error) {
 					console.log(params);
 					fs.unlink('./assets/' + thumbnailName + '.png');
 					res.writeHead(200, { 'Content-Type': 'application/json' });
 					res.write(JSON.stringify({ code: -1, message: result.error }));
 					res.end();
-				}else{
+				} else {
 					let dbvideo = new dbVideo(params);
 					dbvideo.save((err, savedVideo) => {
 						if (err) {

@@ -56,33 +56,33 @@ router.get('/id/:pid', async function (req, res) {
 	}
 });
 
-router.get('/demo', async function (req, res) {
-	try {
-		let songs = await Modals.playlistContent.find(
-			{
-				playlistId: "5d7354acd476a21864141819"
-			}
-		);
-		let songsWithExtraInfo = await VideosModal.dbVideo.populate(songs, { path: 'videoId', select: 'title', model: 'Video' });
-		//let finalRes = await songsWithExtraInfo.sort('videoId');
-		songsWithExtraInfo.sort((a, b) => {
-			//console.log(a+"::"+b);
-			if (a.videoId.title < b.videoId.title) return 1;
-			return -1;
-		});
-		let i = 0;
-		songsWithExtraInfo.forEach(async function (element) {
-			element.orderNum = i;
-			i = i + 1;
-			await element.save();
-		});
-		res.send(songsWithExtraInfo + "</br></br>");
+// router.get('/demo', async function (req, res) {
+// 	try {
+// 		let songs = await Modals.playlistContent.find(
+// 			{
+// 				playlistId: "5d7354acd476a21864141819"
+// 			}
+// 		);
+// 		let songsWithExtraInfo = await VideosModal.dbVideo.populate(songs, { path: 'videoId', select: 'title', model: 'Video' });
+// 		//let finalRes = await songsWithExtraInfo.sort('videoId');
+// 		songsWithExtraInfo.sort((a, b) => {
+// 			//console.log(a+"::"+b);
+// 			if (a.videoId.title < b.videoId.title) return 1;
+// 			return -1;
+// 		});
+// 		let i = 0;
+// 		songsWithExtraInfo.forEach(async function (element) {
+// 			element.orderNum = i;
+// 			i = i + 1;
+// 			await element.save();
+// 		});
+// 		res.send(songsWithExtraInfo + "</br></br>");
 
-	} catch (err) {
-		throw err;
-	}
+// 	} catch (err) {
+// 		throw err;
+// 	}
 
-});
+// });
 
 router.post('/createNew', async function (req, res) {    // API to add new playlist
 	if (!req.body) {                                      // implement checking of playlist name already present
@@ -175,6 +175,20 @@ router.post('/removeFromPlaylist', async function (req, res) {  // API to delete
 
 	if (!req.body) res.end("no request body");
 	console.log("delete req");
+	let orderId = await Modals.playlistContent.findById(req.body.videoId);
+	let updateOrderNum = await Modals.playlistContent.find(
+		{
+			playlistId : req.body.playlistId ,
+			orderNum : { $gt : orderId }
+		}
+	);
+	updateOrderNum.forEach(async (item)=>{
+		item.orderNum = item.orderNum-1;
+		await item.save();
+	});
+	let playlist = await Modals.playlist.findById(req.body.playlistId );
+	playlist.videoCount = playlist.videoCount-1 ;
+	await playlist.save();
 	Modals.playlistContent.deleteOne(
 		{
 			videoId: req.body.videoId,

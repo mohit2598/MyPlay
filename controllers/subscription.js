@@ -6,7 +6,7 @@ async function createNotif(user, video ){ //add video,user agrument
     let userToNotify = await subscription.find({subsTo:user._id},'subsFrom');
     userToNotify.forEach(async function(toUser){
         let newNotif = new notification({
-            notifType : "New video Uploaded.",
+            notifType : "new video uploaded",
             fromUserId : user._id,
             toUserId : toUser.subsFrom,
             fromName : user.name,

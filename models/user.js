@@ -1,5 +1,6 @@
 const { dbUser, validate } = require('../dbModels/user');
 const { dbTmpUser, tmpValidate } = require('../dbModels/tmpUser');
+const { createWatchLaterPlaylist } = require('../controllers/playlist');
 
 function User(params) {
     this.name = params.name;
@@ -39,6 +40,7 @@ User.prototype.signup = async function (newUser) {
                     });
                     dbuser.password = dbuser.hashPassword(this.password);
                     let user = await dbuser.save();
+                    await createWatchLaterPlaylist(user);
                     return { code: 1 };
                 }
             }
