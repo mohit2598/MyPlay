@@ -6,6 +6,11 @@
     color: rgb(255, 80, 80);
 }
 
+.upload-container {
+    text-align: center;
+    margin-top: 80px;
+}
+
 .tags-container {
     display: flex;
     flex-wrap: wrap;

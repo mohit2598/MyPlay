@@ -16,7 +16,8 @@ var reportedAbuse = async function (req, res, next) {
         var requests ;
         validrequest = await dbReports.find();
         let fullReport = await dbVideo.populate(validrequest , { path : 'videoId' , model : 'Video' });
-    
+        console.log(fullReport);
+      //  res.send("hello");
         res.render("adminPanel.ejs", {requests : fullReport, moment : moment});
     } catch (exep) {
         console.log(exep);

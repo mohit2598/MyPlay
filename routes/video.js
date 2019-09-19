@@ -19,6 +19,8 @@ const { createNotif } = require('../controllers/subscription');
 const { dbReports } = require('../dbModels/reports');
 
 
+
+
 router.post('/likeVideo', Video.likeVideo);
 router.post('/dislikeVideo', Video.dislikeVideo);
 router.post('/addComment', Video.addComment);
@@ -33,19 +35,23 @@ router.post('/reportAbuse', Video.reportAbuse);
 router.get('/removeVideo/:id', async (req, res) => {
 
 	if (!req.user || !req.user.isAdmin) {
-		res.status('401').send(req.user + " "  + req.user.email + " " + req.user.isAdmin);
+		res.status('401').send("Unauthorized access");
 	} else {
 		try {
 			var _id = req.params.id;
 			var videoId, uploader;
-			let report = await dbReports.findById(_id);
+			var report = await dbReports.findById(_id);
+			console.log('_id ' + _id);
+			console.log('report ' + report);
 			if (!report) {
 				console.log("no such report abuse");
 			} else {
+				report = await dbReports.findById(_id);
+				console.log(report);
 				videoId = report.videoId;
-
-				let dbvideo = await dbVideo.find({ _id: videoId });
-
+				
+				let video = await dbVideo.find({ _id: videoId });
+				await dbReports.findByIdAndDelete(_id);
 				dbVideo.findOneAndDelete({ _id: videoId }, async (err, deletedVideo) => {
 					if (err) {
 						res.status(500).send('Internal Server Error');
@@ -55,6 +61,9 @@ router.get('/removeVideo/:id', async (req, res) => {
 						if (noOfVideo == 0) {
 							fs.unlink('./assets/' + deletedVideo.id + '.mp4');
 						}
+						console.log("delete notif about to start");
+						await createNotif( deletedVideo.uploader , deletedVideo , 'admin deleted video');
+						console.log("delete notif about to end");
 						//res.send({code : 1,message : 'successfully deletede record'});
 					}
 				});
@@ -80,7 +89,7 @@ router.get('/removeVideo/:id', async (req, res) => {
 //when admin feel it's okkk
 router.get('/noIssue/:id', async (req, res) => {
 
-	if (!req.user) {
+	if (!req.user  || !req.user.isAdmin) {
 		res.status('401').send("Not autherised to do this");
 	}
 	else {
@@ -90,33 +99,23 @@ router.get('/noIssue/:id', async (req, res) => {
 			let report = await dbReports.findById(_id);
 			if (!report) {
 				console.log("no such report abuse");
-
 			}
 			else {
-				videoId = report.videoId;
-				uploader = report.uploader;
-
-
-				let deleted = await dbReports.deleteMany({ videoId: videoId });
-
-
-
+				await dbReports.findByIdAndDelete(_id);
 			}
+			var validrequest;
+
+			// validrequest = await dbReports.find();
+			// let fullReport = await dbVideo.populate(validrequest, { path: 'videoId', model: 'Video' });
+			// console.log(validrequest);
+			// res.render("adminPanel.ejs", { requests: fullReport, moment: moment });
+			 res.redirect('/adminPanel');
 
 		} catch (err) {
 			console.log(err);
 			res.send(err);
 		}
 	}
-
-	var validrequest;
-	try {
-		validrequest = await dbReports.find();
-	} catch (exep) {
-		console.log(exep);
-	}
-	console.log(validrequest);
-	res.render("admin_panel.ejs", { validrequest: validrequest, moment: moment });
 })
 
 router.get('/upload1', (req, res) => {
@@ -238,7 +237,9 @@ router.post('/upload', async (req, res) => {
 
 		busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {		// field is an event listener
 			console.log('Field [' + fieldname + ']: value: ' + val);
-			if (fieldname == 'tags') {
+			if(fieldname == 'file2'){
+
+			}else if (fieldname == 'tags') {
 				params[fieldname] = val.split(',');
 			} else {
 				params[fieldname] = val;
@@ -246,10 +247,14 @@ router.post('/upload', async (req, res) => {
 
 		});
 
-		busboy.on('finish', function () {
+		busboy.on('finish',async function () {
 			console.log('Done parsing form!');
 			console.log('videoOk ' + videoOk);
 			console.log('thumbnailOk ' + thumbnailOk);
+			if(thumbnailOk != 1){
+				await Video.getThumbnail(params.id , params.thumbnailName );
+				thumbnailOk = 1;
+			}
 			if (thumbnailOk != 1 || videoOk != 1) {
 				if (thumbnailOk == 1) {
 					fs.unlink('./assets/' + thumbnailName + '.png');
@@ -266,6 +271,7 @@ router.post('/upload', async (req, res) => {
 				params.hash = hash;
 				params.uploaderName = req.user.name;
 				console.log(" in finish event ");
+				console.log(params);
 				let result = validate(params);
 				if (result.error) {
 					console.log(result);
@@ -277,8 +283,12 @@ router.post('/upload', async (req, res) => {
 					//res.end();
 				} else {
 					console.log('success');
-					dbVideo.findOne({ hash: hash }, (err, oldvideo) => {
+					dbVideo.findOne({ hash: hash },async (err, oldvideo) => {
 						if (!oldvideo) {
+							let length = await Video.getLength(params.id);
+							length = parseInt(length.stdout);
+							
+							params['length'] = length;
 							dbvideo = new dbVideo(params);
 							dbvideo.save(async (err, savedVideo) => {
 								if (err) {
@@ -314,6 +324,7 @@ router.post('/upload', async (req, res) => {
 
 									} else {
 										params.id = oldvideo.id;
+										params['length'] = olvideo.length;
 										dbvideo = new dbVideo(params);
 										dbvideo.save(async (err, savedVideo) => {
 											if (err) {
@@ -365,11 +376,11 @@ router.post('/import/:id', async (req, res) => {
 		if (!dbvideo) {
 			return res.send({ code: -1, message: 'This video is not available' })
 		}
-		let dbvideo2 = await dbVideo.findOne({ hash: dbvideo.hash, uploader: req.user.email });
+		var dbvideo2 = await dbVideo.findOne({ hash: dbvideo.hash, uploader: req.user.email });
 		if (dbvideo2) {
 			return res.send({ code: -1, message: 'This video is already in your account' });
 		}
-
+		var length = dbvideo.length;
 		const uploadPath = path.join(__dirname, '../assets/'); 								// Register the upload path
 		fs.ensureDir(uploadPath); 															// Make sure that he upload path exits
 		//	var md5sum = crypto.createHash('md5');
@@ -412,7 +423,9 @@ router.post('/import/:id', async (req, res) => {
 
 		busboy.on('field', function (fieldname, val, fieldnameTruncated, valTruncated) {		// field is an event listener
 			console.log('Field [' + fieldname + ']: value: ' + val);
-			if (fieldname == 'tags') {
+			if(fieldname == 'file2'){
+
+			}else if (fieldname == 'tags') {
 				params[fieldname] = val.split(',');
 			} else {
 				params[fieldname] = val;
@@ -420,9 +433,13 @@ router.post('/import/:id', async (req, res) => {
 
 		});
 
-		busboy.on('finish', function () {
+		busboy.on('finish',async function () {
 			console.log('Done parsing form!');
 			console.log('thumbnailOk ' + thumbnailOk);
+			if(thumbnailOk != 1){
+				await Video.getThumbnail(params.id , params.thumbnailName );
+				thumbnailOk = 1;
+			}
 			if (thumbnailOk != 1) {
 				if (thumbnailOk == 1) {
 					fs.unlink('./assets/' + thumbnailName + '.png');
@@ -439,6 +456,7 @@ router.post('/import/:id', async (req, res) => {
 					res.write(JSON.stringify({ code: -1, message: result.error }));
 					res.end();
 				} else {
+					params['length'] = length;
 					let dbvideo = new dbVideo(params);
 					dbvideo.save((err, savedVideo) => {
 						if (err) {

@@ -53,9 +53,7 @@
                   <span class="noti-count" id="noti-container-count"></span>
                 </div>
                 <ul class="noti-body">
-                    <li class="noti-text">Shekhar Kumar likes your photo</li>
-                    <li class="noti-text">Chetanya posted a photo on your wall</li>
-                    <li class="noti-text">Ruby commented on your post</li>
+                    
                     </ul>
                     <div class="noti-footer">Mark all as read</div>
                 </div>
@@ -69,8 +67,8 @@
                             <img src="/static/images/profile.jpg" height="50px" width="50px">
                     </div>
                     <div class="profile-details">
-                            <p>Mohit Dogra</p>
-                            <p>mohit2598@gmail.com</p>
+                            <p><%= user.name %></p>
+                            <p><%= user.email %></p>
                     </div>
                     <div class="profile-footer">
                         <a href="/profile/edit" style="text-decoration: none;" class="btn btn-primary">

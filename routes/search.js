@@ -1,6 +1,6 @@
 const express = require('express'),
     router = express.Router(),
-    getSearchResult = require('../static/js/getSearchResults.js'),
+    getSearchResult = require('../controllers/getSearchResults'),
     moment = require('moment')                                      // added to convert standard uploadDate output to required one 
 
 router.get('/query',async function(req, res) {
