@@ -4,28 +4,69 @@ const { dbLike } = require('../dbModels/like'),
     { dbComment } = require('../dbModels/comment'),
     { dbVideo, validate } = require('../dbModels/video'),
     { dbReports } = require('../dbModels/reports'),
-    mongoose = require('mongoose')
+    mongoose = require('mongoose');
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 
+var getLength = async function (video) {       // function to get the length of video uploaded .. uses ffmpeg software 
+    try {
+        let getLengthCommand = 'ffprobe -i ' + video + '.mp4 -show_entries format=duration -v quiet -of csv="p=0"';
+        let cwd = 'C:/Users/rupanshu/Desktop/Web/assets';  // change this to your current working directory
+        let { stdout, stderr } = await exec(getLengthCommand, { cwd: cwd });
+        let obj = { stdout: stdout, stderr: stderr };
+        // console.log("returning stderr:"+ stderr);
+        // console.log("returning stdout:"+ stdout);
+        return obj;
+    }
+    catch (err) {
+        console.log("some error occured in getLength : " + err);
+    }
+};
+
+var getThumbnail = async function (video, thumbnailName) {         //function to capture thumbnail from the mid of video
+    let mid = await getLength(video);
+    mid = mid.stdout;
+    // console.log(mid);
+    mid = Math.floor(parseFloat(mid));
+    //console.log("after floor::"+mid);
+    mid = (mid - (mid % 2)) / 2;
+    let cwd = 'C:/Users/rupanshu/Desktop/Web/assets';  // change this to your current working directory
+    let saveThumbnailCommand = 'ffmpeg -ss ' + mid + ' -i ' + video + '.mp4 -vframes 1 ' + thumbnailName + '.png';
+    let { stderr, stdout } = await exec(saveThumbnailCommand, { cwd: cwd });
+    let obj = { stdout: stdout, stderr: stderr };
+    console.log("now returning");
+    return obj;
+};
 
 //this is to report abuse 
 var reportAbuse = async function (req, res, next) {
+    if (!req.user) {
+        res.status(400).send('Unauthorized access');
+    } else {
+        try {
+            let dbreports = await dbReports.findOne({ reporter: req.user.email, videoId: req.body.videoId });
+            if (dbreports) {
+                res.send({ code: -1, message: ' You have already reported this video' });
+            } else {
+                let dbreports = new dbReports({
+                    reporter: req.user.email,
+                    videoId: req.body.videoId,
+                });
 
-    try{
-        let dbreports = new dbReports({
-            reporter : req.user.email,
-            videoId : req.body.videoId,
-        });
-        
-        let result = await dbreports.save();
-    
-        if (result)
-            res.send("1")
-        else
-            res.send("-1");
-    }catch(ex){
-        console.log(ex);
-        res.status(500).send('Internal Server error');
+                let result = await dbreports.save();
+
+                if (result)
+                    res.send({ code: -1, message: ' You have reported this video' });
+                else
+                    res.send({ code: -1, message: ' Sorry , you could not report this video' });
+            }
+
+        } catch (ex) {
+            console.log(ex);
+            res.status(500).send('Internal Server error');
+        }
     }
+
 
     next();
 }
@@ -361,5 +402,7 @@ module.exports = {
     likeVideo: likeVideo,
     dislikeVideo: dislikeVideo,
     getComment: getComment,
-    reportAbuse : reportAbuse
+    reportAbuse: reportAbuse,
+    getLength: getLength,
+    getThumbnail: getThumbnail
 };

@@ -1,0 +1,63 @@
+<script>
+    $(document).ready(function () {
+        $('.extra-options-button>a').click(function (ele) {
+            $(this).parent().next().toggle(100);
+
+            // return false;
+        });
+        // $('body').click(function(){
+        //     $('.extra-options-container').hide(100);
+        //    // return false;
+
+        // });
+    });
+</script>
+<div class="top-grids">
+    <div class="recommended-info">
+        <h3>My Videos</h3>
+    </div>
+    <% videos.forEach(function (video){ %>
+
+    <div class="col-md-3 resent-grid recommended-grid slider-top-grids">
+        <div class="resent-grid-img recommended-grid-img">
+            <a href="/play/<%= video._id%>"><img src="/assets/<%= video.thumbnailName%>.png" alt="" /></a>
+            <div class="time">
+                <p><strong><%= (video.length-((video.length)%60))/60 %> : <%= (video.length) % 60 %></p></strong>
+            </div>
+            <div class="clck">
+                <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+            </div>
+        </div>
+        <div class="resent-grid-info recommended-grid-info">
+            <h3><a href="/play/<%= video._id%>" class="title title-info">
+                    <%= video.title%>
+                </a></h3>
+            <div class="extra-options-button"><a class="fa fa-ellipsis-v"></a></div>
+            <div class="extra-options-container">
+                <div class="options">
+                    <span class="fa fa-clock-o"></span> <span>Watch Later</span>
+                </div>
+                <div class="options" onclick="addThisToPlaylist(this)" data-videoid="some id">
+                    <span class="fa fa-server"></span><span> Add to Playlist</span>
+                </div>
+                <div class="options">
+                    <span class="fa fa-clone"></span> <span>Import (only if not yours)</span>
+                </div>
+                <div class="options" onclick="reportAbuse(this)" data-videoid="some random">
+                    <span class="fa fa-flag"></span> <span> Report</span>
+                </div>
+            </div>
+            <ul class="tags" style="margin:-4% ">
+                <% var i;var len=video.tags.length ; for(i=0 ; i < len ;i = i+1 ){%>
+                <li><a href="#" class="tag"><%= video.tags[i] %></a></li>
+                <% } %>
+            </ul>
+            <ul>
+                <li class="right-list">
+                    <p class="views views-info"><%= video.views %> views</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <% }) %>
+</div>

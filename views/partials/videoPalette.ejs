@@ -5,7 +5,7 @@
     <div class="col-md-3 video-thumbnail">
         <a href="/play/<%= item._id %>"><img src="/assets/<%= item.thumbnailName %>.png"></a>
         <div class="time">
-            <p>3:04</p>
+            <p><strong><%= (item.length-((item.length)%60))/60 %> : <%= (item.length) % 60 %></strong></p>
         </div>
         <div class="clck">
             <span class="glyphicon glyphicon-time" aria-hidden="true"></span>

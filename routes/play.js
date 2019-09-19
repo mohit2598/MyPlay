@@ -1,7 +1,7 @@
 const express = require('express'),
     router = express.Router(),
     { dbVideo } = require('../dbModels/video'),
-    getSearchResults = require('../static/js/getSearchResults'),
+    getSearchResults = require('../controllers/getSearchResults'),
     mongoose = require('mongoose')
 
 router.get('/:id', async (req, res, next) => {

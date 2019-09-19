@@ -3,6 +3,7 @@ const {dbUser} = require('../dbModels/user');
 const passport = require('passport');
 
 passport.serializeUser(function(user,done) {		
+	console.log('Serializer called '  + user);	
 	var sessionUser = {email : user.email,name : user.name,isAdmin : user.isAdmin,_id : user._id};
 	done(null,sessionUser);			// this would save sessionUser to req.session.passport.user
 });

@@ -43,11 +43,12 @@ var loginGoogle = passport.authenticate('google',{ scope:['profile','email'] })
 
 var loginGoogleCallback = function(req,res,next){
     passport.authenticate('google',function(err,user,info){
-        if(user){
-             res.send(user);
-        }else{
-             res.send(info).redirect('/');
-        }
+        console.log('very nice ' + err);
+        console.log('very nice ' + user);
+        req.login(user, (err) => {
+            console.log('fuck hell');
+            res.redirect('/index')
+        })
     })(req,res,next);
 }
 

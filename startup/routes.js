@@ -12,10 +12,12 @@ const home = require('../routes/home'),
    admin = require('../routes/admin'),
    playlist = require('../routes/playlist'),
    subscribe = require('../routes/subscribe'),
-   adminPanel = require('../routes/adminPanel');
+   adminPanel = require('../routes/adminPanel'),
+   profile = require('../routes/profile');
    
 
 module.exports = function (app) {
+   app.use('/profile',profile);
    app.use('/subscribe',subscribe);
    app.use('/playlist', playlist);
    app.use('/search', search);

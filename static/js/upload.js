@@ -125,14 +125,14 @@ $(document).ready(function () {
                         message: 'Please select a file to upload'
                     }
                 }
-            },
-            template_upload: {
-                validators: {
-                    notEmpty: {
-                        message: 'Please select a template to upload'
-                    }
-                }
             }
+            // template_upload: {
+            //     validators: {
+            //         notEmpty: {
+            //             message: 'Please select a template to upload'
+            //         }
+            //     }
+            // }
         }
     })
         .on('success.form.bv', function (e) {

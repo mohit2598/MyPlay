@@ -23,8 +23,17 @@ router.post('/getNotifs',async function(req,res){
         let notifs = await notification.find({
            toUserId : req.user._id
         }).sort('notifTime').limit(10);
+        console.log("notifs "+notifs);
+        let unread = await notification.find({
+            toUserId : req.user._id ,
+            isRead : false
+        },'isRead');
+        console.log("unread notifications "+unread);
+        unread = unread.length ;
+        console.log("its count"+unread);
+        let obj = { 'notifs' : notifs , 'unread' : unread };
         res.writeHead(200,{'Content-Type':'application/json'});
-        res.write(JSON.stringify(notifs));
+        res.write(JSON.stringify(obj));
         res.end();
     }
 });
