@@ -38,6 +38,10 @@ body{
 .col-md-2.resent-grid.recommended-grid.slider-top-grids:hover .extra-options-button{
   display: block;
 }
+.col-md-3.resent-grid.profile-grid.slider-top-grids:hover .extra-options-button{
+  display: block;
+  /* border : 10px solid black; */
+}
 
 .extra-options-button a{
   text-decoration :none;

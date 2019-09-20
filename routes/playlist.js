@@ -6,29 +6,29 @@ const VideosModal = require("../dbModels/video.js");
 
 
 router.get('/getAll/:userID', async function (req, res) {   // API to get all playlists of a user
-	if(req.user){
+	if (req.user) {
 		try {
-		
-		let publicAccess = !(req.params.userID==req.user._id);
-		let private = "NOT PRIVATE";
-		if(!publicAccess) private = "Private";
-		//console.log("trying to get playlist as public::"+publicAccess);
-		let playlists = await Modals.playlist.find(
-			{
-				authorId: req.params.userID,
-				$or : [ { privacy:"Public" } , {privacy: private }] 	
-			}
-		);
-		let obj = playlists;
-		//console.log(obj);
-		res.writeHead(200, { 'Content-Type': 'application/json' });
-		res.write(JSON.stringify(obj));
-		res.end();
+
+			let publicAccess = !(req.params.userID == req.user._id);
+			let private = "NOT PRIVATE";
+			if (!publicAccess) private = "Private";
+			//console.log("trying to get playlist as public::"+publicAccess);
+			let playlists = await Modals.playlist.find(
+				{
+					authorId: req.params.userID,
+					$or: [{ privacy: "Public" }, { privacy: private }]
+				}
+			);
+			let obj = playlists;
+			//console.log(obj);
+			res.writeHead(200, { 'Content-Type': 'application/json' });
+			res.write(JSON.stringify(obj));
+			res.end();
 		} catch (err) {
 			if (err) throw err;
 		}
 	}
-	else{
+	else {
 		res.status(500).send("not logged In");
 	}
 });
@@ -50,7 +50,7 @@ router.get('/id/:pid', async function (req, res) {
 			return -1;
 		});
 		console.log(songsWithExtraInfo);
-		res.render('playlist2.ejs', { videos: songsWithExtraInfo ,user : req.user});
+		res.render('playlist2.ejs', { videos: songsWithExtraInfo, user: req.user });
 	} catch (err) {
 		throw err;
 	}
@@ -93,34 +93,41 @@ router.post('/createNew', async function (req, res) {    // API to add new playl
 		res.end();
 	} else {
 		console.log(req.user);
-		let nplay = new Modals.playlist({
-			playlistName: req.body.name,
-			authorId: req.user._id,
-			authorName : req.user.name,
-			videoCount: 1,
-			privacy: req.body.privacy
-		});
-		let savedObj, pId;
-		try {
-			savedObj = await nplay.save();
-			pId = savedObj._id;
-			let ncontent = new Modals.playlistContent({
-				videoId: req.body.videoId,
-				playlistId: pId,
-				orderNum: 1
-			});
-			savedObj = await ncontent.save();
-		} catch (err) {
-			console.log(err);
-			res.status(400).send('Some error occured.');
+		let prev = await Modals.playlist.findOne({ playlistName: req.body.name, authorId: req.user._id });
+		if (prev) {
+			res.send("already exists");
+
 		}
-		let obj = {
-			playlistId: pId,
-			response: "Success"
-		};
-		res.writeHead(200, { 'Content-Type': 'application/json' })
-		res.write(JSON.stringify(obj));
-		res.end();
+		else {
+			let nplay = new Modals.playlist({
+				playlistName: req.body.name,
+				authorId: req.user._id,
+				authorName: req.user.name,
+				videoCount: 1,
+				privacy: req.body.privacy
+			});
+			let savedObj, pId;
+			try {
+				savedObj = await nplay.save();
+				pId = savedObj._id;
+				let ncontent = new Modals.playlistContent({
+					videoId: req.body.videoId,
+					playlistId: pId,
+					orderNum: 1
+				});
+				savedObj = await ncontent.save();
+			} catch (err) {
+				console.log(err);
+				res.status(400).send('Some error occured.');
+			}
+			let obj = {
+				playlistId: pId,
+				response: "Success"
+			};
+			res.writeHead(200, { 'Content-Type': 'application/json' })
+			res.write(JSON.stringify(obj));
+			res.end();
+		}
 	}
 
 	//  res.send(obj);
@@ -139,13 +146,14 @@ router.post('/addToPlaylist', async function (req, res) {   // API to add a vide
 	try {
 		let selectedPlaylist = await Modals.playlist.findById(req.body.playlistId);     // to find the videoCount
 		if (selectedPlaylist) {
-			let updatedPlaylist = await Modals.playlist.findByIdAndUpdate(req.body.playlistId,
-				{ videoCount: selectedPlaylist.videoCount + 1 });
+
 			let prevEntry = await Modals.playlistContent.findOne({
 				videoId: req.body.videoId,
 				playlistId: req.body.playlistId
 			});
 			if (!prevEntry) {         //if previous entry is not found i.e. search result is NULL
+				let updatedPlaylist = await Modals.playlist.findByIdAndUpdate(req.body.playlistId,
+					{ videoCount: selectedPlaylist.videoCount + 1 });
 				let nEntry = new Modals.playlistContent({
 					videoId: req.body.videoId,
 					playlistId: req.body.playlistId,
@@ -154,7 +162,7 @@ router.post('/addToPlaylist', async function (req, res) {   // API to add a vide
 				let savedObj = await nEntry.save();
 				res.send("added succesfully");
 			}
-			else{
+			else {
 				res.send("already added");
 			}
 		}
@@ -178,16 +186,16 @@ router.post('/removeFromPlaylist', async function (req, res) {  // API to delete
 	let orderId = await Modals.playlistContent.findById(req.body.videoId);
 	let updateOrderNum = await Modals.playlistContent.find(
 		{
-			playlistId : req.body.playlistId ,
-			orderNum : { $gt : orderId }
+			playlistId: req.body.playlistId,
+			orderNum: { $gt: orderId }
 		}
 	);
-	updateOrderNum.forEach(async (item)=>{
-		item.orderNum = item.orderNum-1;
+	updateOrderNum.forEach(async (item) => {
+		item.orderNum = item.orderNum - 1;
 		await item.save();
 	});
-	let playlist = await Modals.playlist.findById(req.body.playlistId );
-	playlist.videoCount = playlist.videoCount-1 ;
+	let playlist = await Modals.playlist.findById(req.body.playlistId);
+	playlist.videoCount = playlist.videoCount - 1;
 	await playlist.save();
 	Modals.playlistContent.deleteOne(
 		{
@@ -280,17 +288,17 @@ router.post('/orderPlaylist', async function (req, res) {
 });
 
 
-router.get('/view/:playlistId',async function(req,res){
+router.get('/view/:playlistId', async function (req, res) {
 	let pid = req.params.playlistId;
 	try {
 		let playlistInfo = await Modals.playlist.findById(pid);
-		console.log("playlist info ::"+ playlistInfo);
+		console.log("playlist info ::" + playlistInfo);
 		let songs = await Modals.playlistContent.find(
 			{
 				playlistId: pid
 			}
 		);
-		console.log("songs info::"+songs);
+		console.log("songs info::" + songs);
 		let songsWithExtraInfo = await VideosModal.dbVideo.populate(songs, { path: 'videoId', model: 'Video' });
 		// console.log(songsWithExtraInfo+"::this is before sorting");
 		songsWithExtraInfo.sort((a, b) => {
@@ -300,7 +308,7 @@ router.get('/view/:playlistId',async function(req,res){
 		});
 
 		console.log(songsWithExtraInfo);
-		res.render('viewPlaylist.ejs', {playlistInfo: playlistInfo, videos: songsWithExtraInfo , user: req.user});
+		res.render('viewPlaylist.ejs', { playlistInfo: playlistInfo, videos: songsWithExtraInfo, user: req.user });
 	} catch (err) {
 		throw err;
 	}

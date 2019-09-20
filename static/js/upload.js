@@ -38,13 +38,14 @@ function uploadFile() {
     ajax.addEventListener("abort", abortHandler, false);
     ajax.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
-            if (this.responseText.code == 1) {
-                $("#success_message").html('<iclass="glyphicon glyphicon-thumbs-up">' + this.responseText.message);
-                setTimeout(() => {
+            let temp = JSON.parse(this.responseText);
+            if(temp.code == '1'){
+                $("#success_message2").html('<i class="glyphicon glyphicon-thumbs-up"> </>' +temp.message);
+                setTimeout(()=>{
                     window.location = '/';
-                }, 3000);
-            } else {
-                $("#success_message").html('<iclass="glyphicon glyphicon-thumbs-down">' + this.responseText.message);
+                },2000);
+            }else{
+                $("#success_message2").html('<i class="glyphicon glyphicon-thumbs-down"> </>' + temp.message);
             }
         }
     };

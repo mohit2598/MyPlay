@@ -26,10 +26,11 @@ var getLength = async function (video) {       // function to get the length of 
 var getThumbnail = async function (video, thumbnailName) {         //function to capture thumbnail from the mid of video
     let mid = await getLength(video);
     mid = mid.stdout;
+    mid = mid*Math.random();
     // console.log(mid);
     mid = Math.floor(parseFloat(mid));
     //console.log("after floor::"+mid);
-    mid = (mid - (mid % 2)) / 2;
+    //mid = (mid - (mid % 2)) / 2;
     let cwd = 'C:/Users/rupanshu/Desktop/Web/assets';  // change this to your current working directory
     let saveThumbnailCommand = 'ffmpeg -ss ' + mid + ' -i ' + video + '.mp4 -vframes 1 ' + thumbnailName + '.png';
     let { stderr, stdout } = await exec(saveThumbnailCommand, { cwd: cwd });

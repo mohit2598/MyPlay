@@ -1,20 +1,22 @@
 const express = require('express'),
     passport = require('passport'),
-    router = express.Router()
+    router = express.Router(),
+    trending = require('../dbModels/trending.js'),
+    videoModel = require('../dbModels/video');
 
 router.get('/',async (req,res,next) =>{
-    
-    try{       
-        if(req.user){
-            res.render('index.ejs',{user:req.user});
-        } 
-       
-        //res.send(");
-        //res.send(req.user);
-        // res.render("home.ejs",{user:req.user,ques:list,isHome:true,title:'home'})        
+    if(!req.user) res.end("Not signed in");
+    try{
+        let trendingVideos = await trending.find({});
+        trendingVideos = await videoModel.dbVideo.populate(trendingVideos , { path: 'videoId' , model : 'Video'});
+        trendingVideos.sort((a,b)=>{
+            if(a.rank > b.rank ) return 1;
+            return -1;
+        });
+        res.render('index.ejs',{ user: req.user, trendingVideos : trendingVideos });
     }
-    catch(ex){
-        console.log(ex.message);
+    catch(err){
+        console.log("Some error occured in trending post handler."+err);
     }
 });
 

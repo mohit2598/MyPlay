@@ -20,8 +20,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         trim: true,
         minlength: 5,
-        maxlength: 20,
-        unique: true
+        maxlength: 200,
     },
     password:{type: String,
         required: true,
@@ -64,7 +63,7 @@ const User = mongoose.model('User',userSchema);  // 1st arg is the singular obje
 
 function validate(user){
     const schema = {
-        username: Joi.string().min(5).max(50).required(),
+        username: Joi.string().min(5).max(500).required(),
         email: Joi.string().min(8).max(50).required(),
         password: Joi.string().min(5).max(50).required(),
         contactNo:Joi.string().min(10).max(10),

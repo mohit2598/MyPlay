@@ -1,0 +1,38 @@
+<div class="col-md-2 resent-grid recommended-grid slider-top-grids">
+    <div class="resent-grid-img recommended-grid-img">
+        <a href="/play/<%= item.videoId._id %>"><img src="/assets/<%= item.videoId.thumbnailName %>.png" alt="" /></a>
+        <div class="time" style="top:81% !important;">
+            <p><strong><%= (item.videoId.length-((item.videoId.length)%60))/60 %> : <% if( ((item.videoId.length)%60) < 10 ) { %>0<% } %><%= (item.videoId.length) % 60 %></strong></p>
+        </div>
+        <div class="clck" style="right:22% !important;">
+            <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+        </div>
+    </div>
+    <div class="resent-grid-info recommended-grid-info">
+        <h3><a href="/play/<%= item.videoId._id %>" class="title title-info"><%= item.videoId.title %></a></h3>
+        <div class="extra-options-button"><a class="fa fa-ellipsis-v"></a></div>
+        <div class="extra-options-container">
+            <div class="options">
+                <span class="fa fa-clock-o"></span> <span>Watch Later</span>
+            </div>
+            <div class="options" onclick="addThisToPlaylist(this)" data-videoid="<%= item.videoId._id %>">
+                <span class="fa fa-server"></span><span> Add to Playlist</span>
+            </div>
+            <a href="/video/import/<%= item.videoId._id %>" style="text-decoration: none; color:black;"><div class="options">
+                <span class="fa fa-clone"></span>  Import </span>
+            </div>
+            </a>
+            <div class="options" onclick="reportAbuse(this)" data-videoid="<%= item.videoId._id %>">
+                <span class="fa fa-flag"></span> <span> Report</span>
+            </div>
+        </div>
+        <ul>
+            <li>
+                <p class="author author-info"><a href="/profile/<%= item.videoId.uploader %>" class="author"><%= item.videoId.uploaderName %></a></p>
+            </li>
+            <li class="right-list">
+                <p class="views views-info"><%= item.videoId.views %> views</p>
+            </li>
+        </ul>
+    </div>
+</div>

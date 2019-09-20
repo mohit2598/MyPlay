@@ -1,57 +1,41 @@
-<script>
-    $(document).ready(function () {
-        $('.extra-options-button>a').click(function (ele) {
-            $(this).parent().next().toggle(100);
 
-            // return false;
-        });
-        // $('body').click(function(){
-        //     $('.extra-options-container').hide(100);
-        //    // return false;
-
-        // });
-    });
-</script>
 <div class="top-grids">
-    <div class="recommended-info">
+    <div class="profile-info">
         <h3>My Videos</h3>
     </div>
     <% videos.forEach(function (video){ %>
 
-    <div class="col-md-3 resent-grid recommended-grid slider-top-grids">
-        <div class="resent-grid-img recommended-grid-img">
-            <a href="/play/<%= video._id%>"><img src="/assets/<%= video.thumbnailName%>.png" alt="" /></a>
-            <div class="time">
-                <p><strong><%= (video.length-((video.length)%60))/60 %> : <%= (video.length) % 60 %></p></strong>
+    <div class="col-md-3 resent-grid profile-grid slider-top-grids">
+        <div class="resent-grid-img profile-grid-img">
+            <a href="/play/<%= video._id%>"><img src="/assets/<%= video.thumbnailName%>.png" style="width:186px;" alt="" /></a>
+            <div class="time" style="top:80% !important">
+                <p><strong><%= (video.length-((video.length)%60))/60 %> :<% if( ((video.length)%60) < 10 ) { %>0<% } %><%= (video.length) % 60 %></p></strong>
             </div>
-            <div class="clck">
+            <div class="clck" style="bottom:1% ; right:23%;">
                 <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
             </div>
         </div>
-        <div class="resent-grid-info recommended-grid-info">
+        <div class="resent-grid-info profile-grid-info" style="height:13em;">
             <h3><a href="/play/<%= video._id%>" class="title title-info">
                     <%= video.title%>
                 </a></h3>
-            <div class="extra-options-button"><a class="fa fa-ellipsis-v"></a></div>
-            <div class="extra-options-container">
+            <div class="extra-options-button" style="top:5em; left:7em;"><a class="fa fa-ellipsis-v"></a></div>
+            <div class="extra-options-container" style="top:16em;width:149px;font-size:10px; left:16em;">
                 <div class="options">
                     <span class="fa fa-clock-o"></span> <span>Watch Later</span>
                 </div>
-                <div class="options" onclick="addThisToPlaylist(this)" data-videoid="some id">
+                <div class="options" onclick="addThisToPlaylist(this)" data-videoid="<%= video._id %>">
                     <span class="fa fa-server"></span><span> Add to Playlist</span>
                 </div>
-                <div class="options">
-                    <span class="fa fa-clone"></span> <span>Import (only if not yours)</span>
+                <a href="/video/import/<%= video._id %>" style="text-decoration: none; color:black;"><div class="options">
+                    <span class="fa fa-clone"></span>  Import </span>
                 </div>
-                <div class="options" onclick="reportAbuse(this)" data-videoid="some random">
+                </a>
+                <div class="options" onclick="reportAbuse(this)" data-videoid="<%= video._id %>">
                     <span class="fa fa-flag"></span> <span> Report</span>
                 </div>
             </div>
-            <ul class="tags" style="margin:-4% ">
-                <% var i;var len=video.tags.length ; for(i=0 ; i < len ;i = i+1 ){%>
-                <li><a href="#" class="tag"><%= video.tags[i] %></a></li>
-                <% } %>
-            </ul>
+           
             <ul>
                 <li class="right-list">
                     <p class="views views-info"><%= video.views %> views</p>
