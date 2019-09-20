@@ -17,8 +17,9 @@ const { dbDislike } = require('../dbModels/dislike');
 const { dbView } = require('../dbModels/view');
 const { createNotif } = require('../controllers/subscription');
 const { dbReports } = require('../dbModels/reports');
+const trending = require('../dbModels/trending');
 
-
+const subscription = require('../dbModels/subscription');
 
 
 router.post('/likeVideo', Video.likeVideo);
@@ -52,6 +53,7 @@ router.get('/removeVideo/:id', async (req, res) => {
 				
 				let video = await dbVideo.find({ _id: videoId });
 				await dbReports.findByIdAndDelete(_id);
+				await trending.findOneAndDelete({videoId : videoId });
 				dbVideo.findOneAndDelete({ _id: videoId }, async (err, deletedVideo) => {
 					if (err) {
 						res.status(500).send('Internal Server Error');
@@ -60,7 +62,7 @@ router.get('/removeVideo/:id', async (req, res) => {
 						let noOfVideo = await dbVideo.find({ hash: deletedVideo.hash }).count();
 						if (noOfVideo == 0) {
 							fs.unlink('./assets/' + deletedVideo.id + '.mp4');
-						}
+						} 
 						console.log("delete notif about to start");
 						await createNotif( deletedVideo.uploader , deletedVideo , 'admin deleted video');
 						console.log("delete notif about to end");
@@ -161,6 +163,8 @@ router.post('/getVideoDescription', async (req, res) => {
 				userEmail: req.user.email,
 				videoId: _id,
 			});
+			let isSubbed = await subscription.findOne({ subsFrom : req.user._id , subsTo : uploader._id});
+			let subsCount = await subscription.find({subsTo: uploader._id}).count();
 			let view = await dbView.findOne({ userEmail: req.user.email, videoId: _id });
 			if (!view) {
 				let result = await dbview.save();
@@ -169,7 +173,7 @@ router.post('/getVideoDescription', async (req, res) => {
 			res.render('partials/comments.ejs', {
 				video: video, iLiked: iLiked, iDisliked: iDisliked,
 				uploader: uploader, comments: comments, moment: moment, userEmail: req.user.email,
-				likes: likes, dislikes: dislikes
+				likes: likes, dislikes: dislikes, isSubbed : isSubbed , subsCount : subsCount, user :req.user 
 			});
 
 		} catch (ex) {

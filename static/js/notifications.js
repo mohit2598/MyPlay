@@ -12,7 +12,7 @@ $(document).ready(function () {
         $('.noti-count').html(notiCount);
         $('#nav-noti-count').css('display', 'inline-block');
         data.notifs.forEach(element => {
-          let atag = '<div class="noti-div"><a class="noti-a" href="/video/' + element.link + '">' + element.fromName + ' added a new video. Check it out.</a><div class="noti-time" data-notifTime="' + Date.parse(element.notifTime) + '">Just now</div></div>';
+          let atag = '<div class="noti-div"><a class="noti-a" href="/play/' + element.link + '">' + element.fromName + ' added a new video. Check it out.</a><div class="noti-time" data-notifTime="' + Date.parse(element.notifTime) + '">Just now</div></div>';
           if (element.notifType == "admin removed video") {
             atag = '<div class="noti-div"><a class="noti-a" href="#">' + element.fromName + ' has removed your video named ' + element.link + ' due to objectionalable content. Please refrain from uploading such videos again.</a><div class="noti-time" data-notifTime="' + Date.parse(element.notifTime) + '">Just now</div></div>';
           }

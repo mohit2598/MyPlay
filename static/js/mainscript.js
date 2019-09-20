@@ -132,6 +132,7 @@ function addThisToPlaylist(element) {      // this function sets the videoSelect
     function (data, status) {
       if (status == "success") {
         let ndata;
+        console.log(data);
         $('#playlistSectionInModal').html("");
         data.forEach(function (pl) {
           ndata = `<div class='checkbox'>

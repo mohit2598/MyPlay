@@ -17,15 +17,15 @@ async function createNotif(user, video , notifType='default'){ //add video,user 
                     link : video._id
                 });
                 await newNotif.save();
-                console.log("this user is notified:"+toUser);
+              //  console.log("this user is notified:"+toUser);
             });
         }
         else{ 
-            console.log(user);
+            //console.log(user);
             let userId = await dbUser.findOne({email: user });
              notifType = 'admin removed video';
-             console.log('removing video ');
-             console.log(userId);
+            // console.log('removing video ');
+            // console.log(userId);
              let newNotif = new notification({
                 notifType : notifType,
                 fromUserId : "admin",
@@ -34,9 +34,9 @@ async function createNotif(user, video , notifType='default'){ //add video,user 
                 link : video.title
             });
             await newNotif.save();
-            console.log("this user is notified for deletion:"+user);
+           // console.log("this user is notified for deletion:"+user);
         }
-        console.log("new notif req");
+       // console.log("new notif req");
         
     }
     catch(err){

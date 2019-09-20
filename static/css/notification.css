@@ -128,7 +128,7 @@ a.noti-a{
 .profile-pic {
     display: inline-block;
     position: relative;
-    top: -18px;
+    /* top: -18px; */
 
 }
 .profile-details {

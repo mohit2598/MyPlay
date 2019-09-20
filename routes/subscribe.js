@@ -23,14 +23,14 @@ router.post('/getNotifs',async function(req,res){
         let notifs = await notification.find({
            toUserId : req.user._id
         }).sort('notifTime').limit(10);
-        console.log("notifs "+notifs);
+       // console.log("notifs "+notifs);
         let unread = await notification.find({
             toUserId : req.user._id ,
             isRead : false
         },'isRead');
-        console.log("unread notifications "+unread);
+        //console.log("unread notifications "+unread);
         unread = unread.length ;
-        console.log("its count"+unread);
+       // console.log("its count"+unread);
         let obj = { 'notifs' : notifs , 'unread' : unread };
         res.writeHead(200,{'Content-Type':'application/json'});
         res.write(JSON.stringify(obj));
@@ -76,7 +76,7 @@ router.get('/getAllSubs/:userId',async function(req,res){
         //console.log(subscription);
         let allSubs = await subscription.find({ subsFrom: userId });
         //console.log("this is allsubs"+allSubs);
-        let completeInfo = await dbUser.populate(allSubs, { path: 'subsTo' , select: 'name _id username', model: 'User'});
+        let completeInfo = await dbUser.populate(allSubs, { path: 'subsTo' , select: 'name _id username email', model: 'User'});
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.write(JSON.stringify(completeInfo));
         res.end();
@@ -88,11 +88,16 @@ router.get('/getAllSubs/:userId',async function(req,res){
     }
 });
 
-router.post('/hsr/:userId',async function(req,res){  // hre=> handle subscription request
+router.post('/hsr/:email',async function(req,res){  // hre=> handle subscription request
     if(!req.body) res.end("No request body");
-    let subsToUserId = req.params.userId ;
+    let subsToUserEmail = req.params.email ;
+    let subsToUserId = await dbUser.findOne({email:subsToUserEmail},'_id');
+    subsToUserId =  subsToUserId._id;
     let subsOfUserId = req.user._id ;
     let action = req.body.action ;
+    console.log("request of subs recieved."+action);
+    console.log(subsToUserId);
+    console.log(subsOfUserId);
     if(action=="add"){
         try{
             let newSubs = new subscription({
@@ -109,7 +114,8 @@ router.post('/hsr/:userId',async function(req,res){  // hre=> handle subscriptio
     }
     else{
         try{
-            await Modals.subscription.findOneAndDelete({ subsTo: subsToUserId , subsFrom : subsOfUserId },
+            console.log("in delete");
+            await subscription.findOneAndDelete({ subsTo: subsToUserId , subsFrom : subsOfUserId },
                 function(err){
                     if(err) throw err;
                     console.log("deleted Subscription.");

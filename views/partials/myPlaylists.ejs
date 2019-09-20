@@ -12,44 +12,31 @@
             // });
         });
     </script>
+
     <div class="top-grids">
         <div class="recommended-info">
             <h3>My Playsits</h3>
         </div>
-        
+        <% playlists.forEach((item)=>{ %> 
         <div class="col-md-3 resent-grid recommended-grid slider-top-grids">
             <div class="resent-grid-img recommended-grid-img " style="position: relative">
-                <a href="static/single.html"><img src="/static/images/t1.jpg" alt="" /></a>
+                <a href="/playlist/id/<%= item._id %>"><img src="/static/images/t1.jpg" alt="" /></a>
                 <div class="arrow-right" style="position : absolute ; top : 0px; "></div>
                 
             </div>
             <div class="resent-grid-info recommended-grid-info" >
-                <h3><a href="static/single.html" class="title title-info">
-                        </a></h3>
-                <div class="extra-options-button"><a class="fa fa-ellipsis-v"></a></div>
-                <div class="extra-options-container">
-                    <div class="options">
-                        <span class="fa fa-clock-o"></span> <span>Watch Later</span>
-                    </div>
-                    <div class="options" onclick="addThisToPlaylist(this)" data-videoid="some id">
-                        <span class="fa fa-server"></span><span> Add to Playlist</span>
-                    </div>
-                    <div class="options">
-                        <span class="fa fa-clone"></span> <span>Import (only if not yours)</span>
-                    </div>
-                    <div class="options" onclick="reportAbuse(this)" data-videoid="some random">
-                        <span class="fa fa-flag"></span> <span> Report</span>
-                    </div>
-                </div>
+                <h3><a href="/playlist/id/<%= item._id %>" class="title title-info">
+                    <%= item.playlistName %>    </a></h3>
+                
                 <ul>
                     <li>
-                        <p class="author author-info"><a href="#" class="author">John Maniya</a></p>
+                        <p class="author author-info"><a href="#" class="author"><%= item.authorName %></a></p>
                     </li>
                     <li class="right-list">
-                        <p class="views views-info">2,114,200 views</p>
+                        <p class="views views-info"><%= item.videoCount %> videos</p>
                     </li>
                 </ul>
             </div>
         </div>
-        
+        <% }) %>
     </div>

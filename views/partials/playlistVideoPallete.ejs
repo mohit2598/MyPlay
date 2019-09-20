@@ -3,18 +3,18 @@
                     <div class="col-md-3 video-thumbnail" >
                         <a href="/playlist/id/<%= playlistInfo._id %>"><img src="/assets/<%= item.videoId.thumbnailName %>.png" ></a>
                         <div class="time">
-                            <p>3:04</p>
+                            <p><strong><%= (item.videoId.length-((item.videoId.length)%60))/60 %> : <% if( ((item.videoId.length)%60) < 10 ) { %>0<% } %><%= (item.videoId.length) % 60 %></strong></p>
                         </div>
                         <div class="clck">
                             <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
                         </div>
                     </div>
                     <div class="col-md-9 playlist-video-info" >
-                        <a href="/assets/<%= item.videoId._id %>" class="title title-info" ><h3><%= item.videoId.title %></h3></a>
+                        <a href="/playlist/id/<%= playlistInfo._id %>" class="title title-info" ><h3><%= item.videoId.title %></h3></a>
                         <p><%= item.videoId.description %></p>
                         <div class="delete-option-button" onclick="removeFromPlaylist(this)" data-videoid="<%= item.videoId._id %>"><span><i class="fa fa-times"></i></span></div>
                         
-                        <div class="author"><a href="#"><%= item.videoId.uploaderName %></a></div>
+                        <div class="author"><a href="/profile/<%= item.videoId.uploader %>"><%= item.videoId.uploaderName %></a></div>
                     </div>
                 </div>
                 

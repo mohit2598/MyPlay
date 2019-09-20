@@ -8,25 +8,29 @@ const Joi = require('joi');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 
+router.get('/login/google/callback',passport.authenticate('google'),(req,res,next) =>{
+    res.redirect('/');
+});
 
 router.get('/login/google',(req,res,next) =>{
   //  var loginGoogle = passport.authenticate('google',{ scope:['profile','email'] })
+    
     passport.authenticate('google', { scope:['profile','email'] },function (err, user, info) {
         console.log('In google login ' + err);
         console.log('In google login ' + user);
         if (user) {
-            req.login(user, (err) => {
-                console.log('Error ' + err);
-            })
-
+            // req.login(user, (err) => {
+            //     console.log('Error ' + err);
+            // })
+            
+             res.redirect('/');
         } else {
             res.send('fail');
         }
     })(req, res, next);
 });
-router.get('/login/google/callback',passport.authenticate('google'),(req,res,next) =>{
-     res.redirect('/');
-});
+
+
 //router.post('/login',User.login);
 router.post('/login', (req, res, next) => {
     passport.authenticate('local', function (err, user, info) {

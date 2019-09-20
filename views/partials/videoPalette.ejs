@@ -1,11 +1,78 @@
+<style>
+    .tags {
+        list-style: none;
+        margin: -11%;
+        overflow: hidden;
+        padding: 0;
+    }
+
+    .tags li {
+        float: left;
+    }
+
+    .tag {
+        background: #eee;
+        border-radius: 3px 0 0 3px;
+        color: #999;
+        display: inline-block;
+        height: 26px;
+        line-height: 26px;
+        padding: 0 20px 0 23px;
+        position: relative;
+        margin: 0 10px 10px 0;
+        text-decoration: none;
+        -webkit-transition: color 0.2s;
+    }
+
+    .tag::before {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: inset 0 1px rgba(0, 0, 0, 0.25);
+        content: '';
+        height: 6px;
+        left: 10px;
+        position: absolute;
+        width: 6px;
+        top: 10px;
+    }
+
+    .tag::after {
+        background: #fff;
+        border-bottom: 13px solid transparent;
+        border-left: 10px solid #eee;
+        border-top: 13px solid transparent;
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .tag:hover {
+        background-color: crimson;
+        color: white;
+    }
+
+    .tag:hover::after {
+        border-left-color: crimson;
+    }
+
+    .like-content {
+        display: inline-block;
+        width: 100%;
+        font-size: 18px;
+        border-top: 10px dashed #eee;
+
+        float: left;
+    }
+</style>
 <% list.forEach(function(item) { %>
 
 
-<div class="col-md-12 search-video-container">
+<div class="col-md-12 search-video-container" style="position: relative">
     <div class="col-md-3 video-thumbnail">
         <a href="/play/<%= item._id %>"><img src="/assets/<%= item.thumbnailName %>.png"></a>
         <div class="time">
-            <p><strong><%= (item.length-((item.length)%60))/60 %> : <%= (item.length) % 60 %></strong></p>
+            <p><strong><%= (item.length-((item.length)%60))/60 %> : <% if( ((item.length)%60) < 10 ) { %>0<% } %><%= (item.length) % 60 %></strong></p>
         </div>
         <div class="clck">
             <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
@@ -15,8 +82,20 @@
         <a href="/play/<%= item._id %>" class="title title-info">
             <h3><%= item.title %></h3>
         </a>
-        <div class="description"><%= item.description %> </div>
-        <div class="author"><a href="#"><%= item.uploader %></a></div>
+        <div style="display: inline-float; padding: 7px ; float:left; color :grey;font-size: 14px">
+            <a href="/profile/<%= item.uploader %>"><%= item.uploaderName %> </a> <i class="fa fa-eye"
+                aria-hidden="true"></i> <%= item.views %> views | uploaded on
+            <%= moment(item.uploadTime).format('MM-DD-YYYY') %>
+        </div>
+
+    </div>
+    <div class="col-md-9 playlist-video-info" style="position: absolute;bottom: 2px;left:257px">
+        <ul class="tags" style="margin:-4% ;display: inline">
+            <% var i;var len=item.tags.length ; for(i=0 ; i < len ;i = i+1 ){%>
+            <li style="display: inline"><a href="#" class="tag"><%= item.tags[i] %></a></li>
+            <% } %>
+        </ul>
+
     </div>
     <div class="extra-options-search-button"><span><i class="fa fa-ellipsis-v"></i></span></div>
     <div class="extra-options-container">
@@ -26,9 +105,10 @@
         <div class="options" onclick="addThisToPlaylist(this)" data-videoid="<%= item._id %>">
             <span class="fa fa-server"></span><span> Add to Playlist</span>
         </div>
-        <div class="options">
-            <span class="fa fa-clone"></span> <span>Import (only if not yours)</span>
+        <a href="/video/import/<%= item._id %>" style="text-decoration: none; color:black;"><div class="options">
+            <span class="fa fa-clone"></span>  Import </span>
         </div>
+        </a>
         <div class="options" onclick="reportAbuse(this)" data-videoid="<%= item._id %>">
             <span class="fa fa-flag"></span> <span> Report</span>
         </div>
