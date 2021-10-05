@@ -36,6 +36,13 @@ function draw() {
   }
 }
 
+function checkbase1(i) {
+  if (bombs[i].pos.y > height) {
+    health = health - 10;
+    bombs.splice(i,1);
+    bombs.push(new bomb());
+  }
+}
 function mousePressed() {
   if (mouseX < width && mouseY < height) {
     if (missile.length < total) {
