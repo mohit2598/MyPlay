@@ -58,7 +58,7 @@ function Missile() {
     }
   }
 
-/*
+
   this.reset = function() {
     pos = createVector(width/2,height);
     this.target = createVector(0,0,0);
@@ -66,5 +66,5 @@ function Missile() {
     this.launched = false;
     this.hit = false;
   }
-  */
+ 
 }
