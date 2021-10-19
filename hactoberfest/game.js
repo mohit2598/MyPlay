@@ -22,6 +22,7 @@ function draw() {
   stroke(0);
   fill(36,255,36);
   text("Score: " + score, 5, 15);
+  text("ScoreTotal" + scoreTotal , 5, 12);
   text("Health: " + health, 5, 30);
   for (var i = 0; i < bombs.length; i++) {
     checkbase(i);
