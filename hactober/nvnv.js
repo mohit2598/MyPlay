@@ -8,6 +8,7 @@ let myData;
 let pos;
 var car;
 function preload() {
+  // This function actually preloads the data into the app.
   result = loadStrings("track.txt"); 
   images[0] = loadImage("images/grass.png");
   images[1] = loadImage("images/road.png");
