@@ -67,4 +67,9 @@ function Missile() {
     this.hit = false;
   }
   
+  this.disable = function() {
+    pos = null;
+    this.target = 0;
+  }
+  
 }
