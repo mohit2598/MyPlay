@@ -3,6 +3,9 @@ var bombs = [];
 var total = 5;
 var score = 0;
 var health = 100;
+var players = [];
+var numGames = 0;
+var scoreTotal = 0;
 
 function setup() {
   createCanvas(600,400);
