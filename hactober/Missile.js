@@ -6,7 +6,7 @@ function Missile() {
   this.target = createVector(0,0,0);
   this.r = 5;
   this.speed = 2;
-
+  // This function will actually create the missle and launch it in space
   this.launch = function() {
     this.checkhit(this.target);
     if (this.hit === false && this.launched === true) {
