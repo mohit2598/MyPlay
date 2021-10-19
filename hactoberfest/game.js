@@ -11,6 +11,7 @@ function setup() {
   createCanvas(600,400);
   song = loadSound('explode2.mp3');
   bg = loadImage('missile.png');
+  scoreTotal = scoreTotal + score;
   for (var i = 0; i < 5; i++) {
     bombs.push(new bomb());
   }
